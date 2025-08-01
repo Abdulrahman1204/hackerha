@@ -48,6 +48,8 @@ class AuthStudentService {
     const otp = OTPUtils.generateOTP();
     const hashedOtp = await OTPUtils.encryptOTP(otp);
 
+    console.log({otp: otp})
+
     const student = await Student.create({
       userName: studentData.userName,
       phoneNumber: studentData.phoneNumber,
@@ -96,11 +98,15 @@ class AuthStudentService {
       throw new BadRequestError("الحساب مفعل بالفعل");
     }
 
-    const isValidOtp = OTPUtils.verifyOTP(otpData.otp, student.otp);
+    console.log(student)
+
+    const isValidOtp = await OTPUtils.verifyOTP(otpData.otp, student.otp);
+    console.log({isValidOtp: isValidOtp})
     if (!isValidOtp) {
       throw new BadRequestError("رمز التحقق غير صحيح");
     }
 
+  
     const token = generateJWT({
       id: studentId,
       role: "student",
