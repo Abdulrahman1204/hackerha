@@ -32,7 +32,7 @@ class AuthStudentController {
         token: string;
       };
 
-      res.status(200).json({ message: result.message, result.token });
+      res.status(200).json({ message: result.message, token: result.token });
     }
   );
 }
