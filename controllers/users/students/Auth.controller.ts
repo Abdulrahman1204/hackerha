@@ -20,15 +20,7 @@ class AuthStudentController {
         req.params.id
       )) as { message: string; token: string };
 
-      res.cookie("tokenHackit", result.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 30 * 1000,
-      });
-
-      res.status(200).json({ message: result.message });
+      res.status(200).json({ message: result.message, token: result.token });
     }
   );
 
@@ -40,15 +32,7 @@ class AuthStudentController {
         token: string;
       };
 
-      res.cookie("tokenHackit", result.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 30 * 1000,
-      });
-
-      res.status(200).json({ message: result.message });
+      res.status(200).json({ message: result.message, result.token });
     }
   );
 }
