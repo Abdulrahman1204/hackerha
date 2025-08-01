@@ -55,18 +55,6 @@ app.use(
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
-  res.send("API is running in Captal");
-});
-app.get("/health", (req: Request, res: Response) => {
-  res.status(200).json({
-    status: "healthy",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  });
-});
-
-// Routes
-app.get("/", (req: Request, res: Response) => {
   res.send("API is running in Hack it");
 });
 app.get("/health", (req: Request, res: Response) => {
