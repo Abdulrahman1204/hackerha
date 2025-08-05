@@ -36,6 +36,7 @@ class CtrlStudentService {
     const hashedOtp = await OTPUtils.encryptOTP(otp);
 
     existingInactiveByEmail.otp = hashedOtp;
+    existingInactiveByEmail.resetPass = false;
     await existingInactiveByEmail.save();
 
     try {
@@ -104,14 +105,22 @@ class CtrlStudentService {
       throw new BadRequestError("الحساب غير بالفعل");
     }
 
-    console.log(existingInactiveById.resetPass)
-
     if (!existingInactiveById.resetPass) {
       throw new BadRequestError("غير مسموح لك بتغيير كلمة السر");
     }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(studentData.password, salt);
+
+    const isSamePassword = await bcrypt.compare(
+      studentData.password,
+      existingInactiveById.password
+    );
+    if (isSamePassword) {
+      throw new BadRequestError(
+        "كلمة السر الجديدة يجب أن تكون مختلفة عن القديمة"
+      );
+    }
 
     existingInactiveById.password = hashedPassword;
     existingInactiveById.resetPass = false;
