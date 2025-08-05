@@ -89,7 +89,7 @@ class CtrlStudentService {
     return { message: "تم التحقق من كود" };
   }
 
-  // ~ Post => /api/hackit/ctrl/student/changepass/:id ~ Change Password For Student
+  // ~ Put => /api/hackit/ctrl/student/changepass/:id ~ Change Password For Student
   static async ChagePasswordStudent(studentData: IStudent, id: string) {
     const { error } = validatePasswourd(studentData);
     if (error) {
@@ -109,9 +109,6 @@ class CtrlStudentService {
       throw new BadRequestError("غير مسموح لك بتغيير كلمة السر");
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(studentData.password, salt);
-
     const isSamePassword = await bcrypt.compare(
       studentData.password,
       existingInactiveById.password
@@ -122,9 +119,23 @@ class CtrlStudentService {
       );
     }
 
-    existingInactiveById.password = hashedPassword;
-    existingInactiveById.resetPass = false;
-    await existingInactiveById.save();
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(studentData.password, salt);
+
+    const updatedStudent = await Student.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          password: hashedPassword,
+          resetPass: false,
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedStudent) {
+      throw new Error("فشل تحديث كلمة السر");
+    }
 
     return { message: "تم تحديث كلمة السر بنجاح" };
   }

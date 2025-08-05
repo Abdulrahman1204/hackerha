@@ -14,8 +14,6 @@ router
   .post(ctrlStudentController.forgetPasswordStudent);
 
 // ~ Post => /api/hackit/ctrl/student/changepass/:id ~ Change Password For Student
-router
-  .route("/changepass/:id")
-  .post(ctrlStudentController.ChagePasswordStudent);
+router.route("/changepass/:id").put(ctrlStudentController.ChagePasswordStudent);
 
 export default router;
