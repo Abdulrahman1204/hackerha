@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 /**
  * إرسال بريد إلكتروني بسيط
  * @param to البريد المستلم
@@ -24,4 +26,14 @@ export interface CloudinaryFile {
 export interface JWTPayload {
   id: string;
   role: string;
+}
+
+/**
+ * من اجل التحقق
+ */
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+    role: string;
+  };
 }

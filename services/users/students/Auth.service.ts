@@ -7,7 +7,6 @@ import {
   Student,
   validateCreateStudent,
   validateLoginStudent,
-  validateUpdateStudent,
   validationOtp,
 } from "../../../models/users/students/Student.model";
 import { OTPUtils } from "../../../utils/generateOtp";

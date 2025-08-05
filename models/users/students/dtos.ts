@@ -16,6 +16,7 @@ export interface IStudent extends Document {
   otp: string;
   available: boolean;
   suspended: boolean;
+  resetPass: boolean;
   suspensionReason: string;
   suspensionEnd: Date;
 }

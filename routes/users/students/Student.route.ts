@@ -1,15 +1,21 @@
 import { Router } from "express";
-import AuthStudentController from "../../../controllers/users/students/Auth.controller";
+import { ctrlStudentController } from "../../../controllers/users/students/Student.controller";
 
 const router: Router = Router();
 
-// ~ Post => /api/hackit/ctrl/student ~ Create New Student
-router.route("/register").post(AuthStudentController.createNewStudentCtrl);
+// ~ Post => /api/hackit/ctrl/student/sendemailpassword ~ Send Email For Password For Student
+router
+  .route("/sendemailpassword")
+  .post(ctrlStudentController.sendEmailForPasswordStudent);
 
-// ~ Post => /api/hackit/ctrl/student/verifyotp/:id ~ verifyOtp
-router.route("/verifyotp/:id").post(AuthStudentController.verifyOtpCtrl);
+// ~ Post => /api/hackit/ctrl/student/forgetPass/:id ~ Forget Password For Student
+router
+  .route("/forgetPass/:id")
+  .post(ctrlStudentController.forgetPasswordStudent);
 
-// ~ Post => /api/hackit/ctrl/student/login ~ Login Student
-router.route("login").post(AuthStudentController.loginStudent);
+// ~ Post => /api/hackit/ctrl/student/changepass/:id ~ Change Password For Student
+router
+  .route("/changepass/:id")
+  .post(ctrlStudentController.ChagePasswordStudent);
 
 export default router;

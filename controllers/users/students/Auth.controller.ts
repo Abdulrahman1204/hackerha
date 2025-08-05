@@ -37,4 +37,4 @@ class AuthStudentController {
   );
 }
 
-export default new AuthStudentController();
+export const authStudentController = new AuthStudentController();

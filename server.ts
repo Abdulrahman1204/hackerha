@@ -11,7 +11,8 @@ import compression from "compression";
 dotenv.config();
 
 // routes import
-import routeStudent from "./routes/users/students/Student.route";
+import routeAuthStudent from "./routes/users/students/Auth.route";
+import routeCtrlStudent from "./routes/users/students/Student.route";
 
 // Validate required environment variables
 const requiredEnvVars = [
@@ -64,7 +65,10 @@ app.get("/health", (req: Request, res: Response) => {
     uptime: process.uptime(),
   });
 });
-app.use("/api/hackit/ctrl/student", routeStudent);
+
+// Student Routes
+app.use("/api/hackit/ctrl/student", routeAuthStudent);
+app.use("/api/hackit/ctrl/student", routeCtrlStudent);
 
 // Error Handler Middleware
 app.use(notFound);

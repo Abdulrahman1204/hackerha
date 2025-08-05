@@ -73,6 +73,10 @@ const StudentSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    resetPass: {
+      type: Boolean,
+      default: false,
+    },
     suspensionReason: String,
     suspensionEnd: Date,
   },
@@ -106,7 +110,7 @@ StudentSchema.index({ createdAt: -1 });
 // Validation Check Otp
 const validationOtp = (obj: IOtp): joi.ValidationResult => {
   const schema = joi.object({
-    otp: joi.string().required().messages({
+    otp: joi.string().length(5).required().messages({
       "string.empty": "لا يمكن أن يكون فارغاً",
       "any.required": "مطلوب",
     }),
@@ -190,6 +194,46 @@ const validateLoginStudent = (obj: IStudent): joi.ValidationResult => {
   return schema.validate(obj);
 };
 
+// Validation Send Eamil
+const validateSendEmail = (obj: IStudent): joi.ValidationResult => {
+  const schema = joi.object({
+    email: joi.string().email().min(3).max(100).required().messages({
+      "string.email": "البريد الإلكتروني غير صالح",
+      "string.empty": "البريد الإلكتروني مطلوب",
+      "string.min": "البريد الإلكتروني يجب أن يكون على الأقل 3 أحرف",
+      "string.max": "البريد الإلكتروني يجب ألا يتجاوز 100 حرف",
+      "any.required": "البريد الإلكتروني مطلوب",
+    }),
+  });
+
+  return schema.validate(obj);
+};
+
+// Validation Reset Pass
+const validateResetPass = (obj: IStudent): joi.ValidationResult => {
+  const schema = joi.object({
+    otp: joi.string().length(5).required().messages({
+      "string.empty": "لا يمكن أن يكون فارغاً",
+      "any.required": "مطلوب",
+    }),
+  });
+
+  return schema.validate(obj);
+};
+
+// Validation Password
+const validatePasswourd = (obj: IStudent): joi.ValidationResult => {
+  const schema = joi.object({
+    password: joi.string().min(8).required().messages({
+      "string.min": "كلمة السر يجب أن تكون على الأقل 8 أحرف",
+      "string.empty": "كلمة السر مطلوبة",
+      "any.required": "كلمة السر مطلوبة",
+    }),
+  });
+
+  return schema.validate(obj);
+};
+
 // Validation Update Student
 const validateUpdateStudent = (
   obj: Partial<IStudent>
@@ -245,4 +289,7 @@ export {
   validateUpdateStudent,
   validateUpdateProfilePhoto,
   validateLoginStudent,
+  validateSendEmail,
+  validateResetPass,
+  validatePasswourd
 };
