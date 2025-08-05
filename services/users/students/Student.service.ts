@@ -86,7 +86,7 @@ class CtrlStudentService {
     existingInactiveById.resetPass = true;
     await existingInactiveById.save();
 
-    return { message: "تم التحقق من كود" };
+    return { message: "تم التحقق من الكود" };
   }
 
   // ~ Put => /api/hackit/ctrl/student/changepass/:id ~ Change Password For Student
