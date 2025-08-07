@@ -14,6 +14,7 @@ import { generateJWT } from "../../../utils/generateToken";
 import { sendEmail } from "../../../utils/mailer";
 import { html } from "../../../utils/mailHtml";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 class AuthStudentService {
   // ~ Post => /api/hackit/ctrl/student/register ~ Create New Student
@@ -46,8 +47,6 @@ class AuthStudentService {
 
     const otp = OTPUtils.generateOTP();
     const hashedOtp = await OTPUtils.encryptOTP(otp);
-
-    console.log({otp: otp})
 
     const student = await Student.create({
       userName: studentData.userName,
@@ -96,8 +95,6 @@ class AuthStudentService {
     if (student.available) {
       throw new BadRequestError("الحساب مفعل بالفعل");
     }
-
-    console.log(student)
 
     const isValidOtp = await OTPUtils.verifyOTP(otpData.otp, student.otp);
     console.log({isValidOtp: isValidOtp})

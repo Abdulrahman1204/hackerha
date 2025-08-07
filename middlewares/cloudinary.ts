@@ -3,7 +3,7 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 import { Request } from "express";
-import { CloudinaryFile } from "../utils/types";
+import { ICloudinaryFile } from "../utils/types";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -16,7 +16,7 @@ cloudinary.config({
 // Create Cloudinary storage engine
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: async (req: Request, file: CloudinaryFile) => {
+  params: async (req: Request, file: ICloudinaryFile) => {
     const ext = path.extname(file.originalname).toLowerCase();
     let resourceType: "auto" | "raw" | "video" = "auto";
     

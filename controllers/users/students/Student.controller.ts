@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { CtrlStudentService } from "../../../services/users/students/Student.service";
-import { AuthenticatedRequest } from "../../../utils/types";
-import { NotFoundError } from "../../../middlewares/handleErrors";
+import { AuthenticatedRequest, ICloudinaryFile } from "../../../utils/types";
+import {
+  ForbiddenError,
+  NotFoundError,
+} from "../../../middlewares/handleErrors";
 
 class CtrlStudentController {
   // ~ Post => /api/hackit/ctrl/student/sendemailpassword ~ Send Email For Password For Student
@@ -33,6 +36,104 @@ class CtrlStudentController {
         req.body,
         req.params.id
       );
+      res.status(200).json({ message: result.message });
+    }
+  );
+
+  // ~ Put => /api/hackit/ctrl/student/updatedetailsprofile/:id ~ Change details of student
+  UpdateProfileStudent = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+      const user = (req as AuthenticatedRequest).user;
+      const targetUserId = req.params.id;
+
+      if (user?.id !== targetUserId) {
+        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
+      }
+
+      const result = await CtrlStudentService.UpdateProfileStudent(
+        req.body,
+        targetUserId
+      );
+
+      res.status(200).json({ message: result.message });
+    }
+  );
+
+  // ~ Put => /api/hackit/ctrl/student/UpdateProfileSuspendedStudent/:id ~ Change Suspended of student
+  UpdateProfileSuspendedStudent = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+      const user = (req as AuthenticatedRequest).user;
+      const targetUserId = req.params.id;
+
+      if (user?.role !== "admin" && user?.role !== "helper") {
+        throw new ForbiddenError("غير مصرح لك بتقييد الحساب");
+      }
+
+      const result = await CtrlStudentService.UpdateProfileSuspendedStudent(
+        req.body,
+        targetUserId
+      );
+
+      res.status(200).json({ message: result.message });
+    }
+  );
+
+  // ~ Put => /api/hackit/ctrl/student/UpdateProfileImpStudentAdmin/:id ~ Change important details of student
+  UpdateProfileImpStudentAdmin = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+      const user = (req as AuthenticatedRequest).user;
+      const targetUserId = req.params.id;
+
+      if (user?.role !== "admin" && user?.role !== "helper") {
+        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
+      }
+
+      const result = await CtrlStudentService.UpdateProfileImpStudentAdmin(
+        req.body,
+        targetUserId
+      );
+
+      res.status(200).json({ message: result.message });
+    }
+  );
+
+  // ~ Put => /api/hackit/ctrl/student/updateimageprofile/:id ~ Change Image of student
+  UpdateImageProfileStudent = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+      const user = (req as AuthenticatedRequest).user;
+      const targetUserId = req.params.id;
+
+      if (user?.id !== targetUserId) {
+        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
+      }
+
+      const result = await CtrlStudentService.UpdateImageProfileStudent(
+        req.file as ICloudinaryFile,
+        targetUserId
+      );
+
+      res.status(200).json({ message: result.message });
+    }
+  );
+
+  // ~ Delete => /api/hackit/ctrl/student/account/:id ~ Delete Student Account
+  DeleteStudentAccount = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+      const user = (req as AuthenticatedRequest).user;
+      const targetUserId = req.params.id;
+
+      if (
+        user?.id !== targetUserId &&
+        user?.role !== "admin" &&
+        user?.role !== "helper"
+      ) {
+        throw new ForbiddenError("غير مصرح لك بحذف الحساب");
+      }
+
+      const result = await CtrlStudentService.DeleteStudentAccount(
+        targetUserId
+      );
+
       res.status(200).json({ message: result.message });
     }
   );

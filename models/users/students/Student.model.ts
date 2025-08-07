@@ -7,11 +7,8 @@ import bcrypt from "bcrypt";
 const StudentSchema = new Schema(
   {
     profilePhoto: {
-      type: Object,
-      default: {
-        url: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-        publicId: null,
-      },
+      type: String,
+      default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       required: true,
     },
     userName: {
@@ -78,7 +75,6 @@ const StudentSchema = new Schema(
       default: false,
     },
     suspensionReason: String,
-    suspensionEnd: Date,
   },
   {
     timestamps: true,
@@ -239,44 +235,87 @@ const validateUpdateStudent = (
   obj: Partial<IStudent>
 ): joi.ValidationResult => {
   const schema = joi.object({
-    userName: joi.string().max(100).optional(),
+    userName: joi.string().max(100).messages({
+      "string.empty": "الاسم الكامل مطلوب",
+      "string.max": "الاسم الكامل يجب ألا يتجاوز 100 حرف",
+      "any.required": "الاسم الكامل مطلوب",
+    }),
     phoneNumber: joi
       .string()
       .pattern(/^09[0-9]{8}$/)
-      .optional()
       .messages({
         "string.pattern.base":
           "رقم الهاتف غير صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام.",
+        "string.empty": "رقم الهاتف مطلوب",
+        "any.required": "رقم الهاتف مطلوب",
       }),
-    university: joi
-      .string()
-      .valid("جامعة قرطبة", "جامعة إيبلا", "جامعة الشهباء", "جامعة حلب")
-      .optional(),
-    academicYear: joi.date().optional(),
-    universityNumber: joi.string().optional(),
-    birth: joi.date().optional(),
-    email: joi.string().email().min(3).max(100).optional(),
-    password: joi.string().min(8).optional(),
   });
 
   return schema.validate(obj);
 };
 
-// Validation for updating profilePhoto only
-const validateUpdateProfilePhoto = (
-  obj: Partial<IProfilePhoto>
+// Validation Update Important Student
+const validateUpdateImportantStudent = (
+  obj: Partial<IStudent>
 ): joi.ValidationResult => {
   const schema = joi.object({
-    profilePhoto: joi
-      .object({
-        url: joi.string().uri().required(),
-        publicId: joi.string().required(),
-      })
+    userName: joi.string().max(100).messages({
+      "string.empty": "الاسم الكامل مطلوب",
+      "string.max": "الاسم الكامل يجب ألا يتجاوز 100 حرف",
+      "any.required": "الاسم الكامل مطلوب",
+    }),
+    phoneNumber: joi
+      .string()
+      .pattern(/^09[0-9]{8}$/)
+      .messages({
+        "string.pattern.base":
+          "رقم الهاتف غير صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام.",
+        "string.empty": "رقم الهاتف مطلوب",
+        "any.required": "رقم الهاتف مطلوب",
+      }),
+    university: joi
+      .string()
+      .valid("جامعة قرطبة", "جامعة إيبلا", "جامعة الشهباء", "جامعة حلب")
       .required()
       .messages({
-        "object.base": "يجب أن تكون صورة الملف الشخصي كائنًا",
-        "any.required": "صورة الملف الشخصي مطلوبة",
+        "any.only":
+          "الجامعة يجب ان تكون ( جامعة حلب أو جامعة الشهباء أو جامعة إيبلا أو جامعة قرطبة )",
+        "any.required": "الجامعة مطلوبة",
       }),
+    academicYear: joi.date().required().messages({
+      "date.base": "صيغة السنة الدراسية غير صحيحة",
+      "any.required": "السنة الدراسية مطلوبة",
+    }),
+    universityNumber: joi.string().required().messages({
+      "string.empty": "الرقم الجامعي مطلوب",
+      "any.required": "الرقم الجامعي مطلوب",
+    }),
+    birth: joi.date().required().messages({
+      "date.base": "تاريخ الميلاد غير صالح",
+      "any.required": "تاريخ الميلاد مطلوب",
+    }),
+    email: joi.string().email().min(3).max(100).required().messages({
+      "string.email": "البريد الإلكتروني غير صالح",
+      "string.empty": "البريد الإلكتروني مطلوب",
+      "string.min": "البريد الإلكتروني يجب أن يكون على الأقل 3 أحرف",
+      "string.max": "البريد الإلكتروني يجب ألا يتجاوز 100 حرف",
+      "any.required": "البريد الإلكتروني مطلوب",
+    }),
+  });
+
+  return schema.validate(obj);
+};
+
+const validateUpdateSuspendedStudent = (
+  obj: Partial<IStudent>
+): joi.ValidationResult => {
+  const schema = joi.object({
+    suspended: joi.boolean().required().messages({
+      "any.required": "عملية التقييد مطلوب",
+    }),
+    suspensionReason: joi.string().required().messages({
+      "any.required": "سبب التقييد مطلوب",
+    }),
   });
 
   return schema.validate(obj);
@@ -287,9 +326,10 @@ export {
   validationOtp,
   validateCreateStudent,
   validateUpdateStudent,
-  validateUpdateProfilePhoto,
   validateLoginStudent,
   validateSendEmail,
   validateResetPass,
-  validatePasswourd
+  validatePasswourd,
+  validateUpdateSuspendedStudent,
+  validateUpdateImportantStudent
 };

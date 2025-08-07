@@ -5,16 +5,18 @@ import {
 import { IOtp, IStudent } from "../../../models/users/students/dtos";
 import {
   Student,
-  validateUpdateProfilePhoto,
   validateUpdateStudent,
   validateSendEmail,
   validateResetPass,
   validatePasswourd,
+  validateUpdateSuspendedStudent,
+  validateUpdateImportantStudent,
 } from "../../../models/users/students/Student.model";
 import { OTPUtils } from "../../../utils/generateOtp";
 import { sendEmail } from "../../../utils/mailer";
 import { html } from "../../../utils/mailHtml";
 import bcrypt from "bcrypt";
+import { ICloudinaryFile } from "../../../utils/types";
 
 class CtrlStudentService {
   // ~ Post => /api/hackit/ctrl/student/sendemailpassword ~ Send Email For Password For Student
@@ -30,6 +32,14 @@ class CtrlStudentService {
     });
     if (!existingInactiveByEmail) {
       throw new BadRequestError("البريد الإلكتروني غير موجود");
+    }
+
+    if (!existingInactiveByEmail.available) {
+      throw new BadRequestError("الحساب غير بالفعل");
+    }
+
+    if (existingInactiveByEmail.suspended) {
+      throw new BadRequestError("حسابك مقيد");
     }
 
     const otp = OTPUtils.generateOTP();
@@ -74,6 +84,10 @@ class CtrlStudentService {
       throw new BadRequestError("الحساب غير بالفعل");
     }
 
+    if (existingInactiveById.suspended) {
+      throw new BadRequestError("حسابك مقيد");
+    }
+
     const isValidOtp = await OTPUtils.verifyOTP(
       studentData.otp,
       existingInactiveById.otp
@@ -103,6 +117,10 @@ class CtrlStudentService {
 
     if (!existingInactiveById.available) {
       throw new BadRequestError("الحساب غير بالفعل");
+    }
+
+    if (existingInactiveById.suspended) {
+      throw new BadRequestError("حسابك مقيد");
     }
 
     if (!existingInactiveById.resetPass) {
@@ -138,6 +156,197 @@ class CtrlStudentService {
     }
 
     return { message: "تم تحديث كلمة السر بنجاح" };
+  }
+
+  // ~ Put => /api/hackit/ctrl/student/updatedetailsprofile/:id ~ Change details of student
+  static async UpdateProfileStudent(studentData: IStudent, id: string) {
+    const { error } = validateUpdateStudent(studentData);
+    if (error) {
+      throw new BadRequestError(error.details[0].message);
+    }
+
+    const existingInactiveById = await Student.findById(id);
+    if (!existingInactiveById) {
+      throw new BadRequestError("المستخدم غير موجود");
+    }
+
+    if (!existingInactiveById.available) {
+      throw new BadRequestError("الحساب غير بالفعل");
+    }
+
+    if (existingInactiveById.suspended) {
+      throw new BadRequestError("حسابك مقيد");
+    }
+
+    const updatedStudent = await Student.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          userName: studentData.userName,
+          phoneNumber: studentData.phoneNumber,
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedStudent) {
+      throw new Error("فشل تحديث معلومات الطالب");
+    }
+
+    return { message: "تم التحديث بنجاح" };
+  }
+
+  // ~ Put => /api/hackit/ctrl/student/UpdateProfileSuspendedStudent/:id ~ Change Suspended of student
+  static async UpdateProfileSuspendedStudent(
+    studentData: IStudent,
+    id: string
+  ) {
+    const { error } = validateUpdateSuspendedStudent(studentData);
+    if (error) {
+      throw new BadRequestError(error.details[0].message);
+    }
+
+    const existingInactiveById = await Student.findById(id);
+    if (!existingInactiveById) {
+      throw new BadRequestError("المستخدم غير موجود");
+    }
+
+    if (!existingInactiveById.available) {
+      throw new BadRequestError("الحساب غير بالفعل");
+    }
+
+    if (existingInactiveById.suspended) {
+      throw new BadRequestError("حسابك مقيد");
+    }
+
+    const updatedStudent = await Student.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          suspended: studentData.suspended,
+          suspensionReason: studentData.suspensionReason,
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedStudent) {
+      throw new Error("فشل في تقييد الحساب");
+    }
+
+    return { message: "تم تقييد الحساب بنجاح" };
+  }
+
+  // ~ Put => /api/hackit/ctrl/student/UpdateProfileImpStudentAdmin/:id ~ Change important details of student
+  static async UpdateProfileImpStudentAdmin(studentData: IStudent, id: string) {
+    const { error } = validateUpdateImportantStudent(studentData);
+    if (error) {
+      throw new BadRequestError(error.details[0].message);
+    }
+
+    const existingInactiveById = await Student.findById(id);
+    if (!existingInactiveById) {
+      throw new BadRequestError("المستخدم غير موجود");
+    }
+
+    if (!existingInactiveById.available) {
+      throw new BadRequestError("الحساب غير بالفعل");
+    }
+
+    if (existingInactiveById.suspended) {
+      throw new BadRequestError("حسابك مقيد");
+    }
+
+    const updatedStudent = await Student.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          userName: studentData.userName,
+          phoneNumber: studentData.phoneNumber,
+          university: studentData.university,
+          academicYear: studentData.academicYear,
+          universityNumber: studentData.universityNumber,
+          birth: studentData.birth,
+          email: studentData.email,
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedStudent) {
+      throw new Error("فشل تحديث معلومات الطالب");
+    }
+
+    return { message: "تم التحديث بنجاح" };
+  }
+
+  // ~ Put => /api/hackit/ctrl/student/updateimageprofile/:id ~ Change Image of student
+  static async UpdateImageProfileStudent(file: ICloudinaryFile, id: string) {
+    const existingInactiveById = await Student.findById(id);
+    if (!existingInactiveById) {
+      throw new BadRequestError("المستخدم غير موجود");
+    }
+
+    if (!existingInactiveById.available) {
+      throw new BadRequestError("الحساب غير بالفعل");
+    }
+
+    if (existingInactiveById.suspended) {
+      throw new BadRequestError("حسابك مقيد");
+    }
+
+    console.log(file);
+
+    if (!file) {
+      throw new BadRequestError("صورة الملف الشخصي مطلوبة");
+    }
+
+    const updatedStudent = await Student.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          profilePhoto: file.path,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!updatedStudent) {
+      throw new Error("فشل تحديث صورة الملف الشخصي");
+    }
+
+    return {
+      message: "تم تحديث صورة الملف الشخصي بنجاح",
+    };
+  }
+
+  // ~ Delete => /api/hackit/ctrl/student/account/:id ~ Delete Student Account
+  static async DeleteStudentAccount(id: string) {
+    const existingInactiveById = await Student.findById(id);
+    if (!existingInactiveById) {
+      throw new BadRequestError("المستخدم غير موجود");
+    }
+
+    if (!existingInactiveById.available) {
+      throw new BadRequestError("الحساب غير بالفعل");
+    }
+
+    if (existingInactiveById.suspended) {
+      throw new BadRequestError("حسابك مقيد");
+    }
+
+    const deleteAccount = await Student.findByIdAndDelete(id);
+
+    if (!deleteAccount) {
+      throw new Error("فشل في حذف الحساب");
+    }
+
+    return {
+      message: "تم حذف الحساب بنجاح",
+    };
   }
 }
 

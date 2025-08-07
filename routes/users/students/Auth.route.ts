@@ -10,6 +10,6 @@ router.route("/register").post(authStudentController.createNewStudentCtrl);
 router.route("/verifyotp/:id").post(authStudentController.verifyOtpCtrl);
 
 // ~ Post => /api/hackit/ctrl/student/login ~ Login Student
-router.route("login").post(authStudentController.loginStudent);
+router.route("/login").post(authStudentController.loginStudent);
 
 export default router;

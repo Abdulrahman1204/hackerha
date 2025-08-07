@@ -1,10 +1,7 @@
 import { Document, Types } from "mongoose";
 
 export interface IStudent extends Document {
-  profilePhoto: {
-    url: string;
-    publicId: string | null;
-  };
+  profilePhoto: string;
   userName: string;
   phoneNumber: string;
   university: "جامعة قرطبة" | "جامعة إيبلا" | "جامعة الشهباء" | "جامعة حلب";

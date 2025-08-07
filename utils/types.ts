@@ -14,13 +14,6 @@ export interface EmailOptions {
 }
 
 /**
- * صورة البروفايل
- */
-export interface CloudinaryFile {
-  originalname: string;
-}
-
-/**
  * انشاء token
  */
 export interface JWTPayload {
@@ -36,4 +29,11 @@ export interface AuthenticatedRequest extends Request {
     id: string;
     role: string;
   };
+}
+
+/**
+ * رفع ملفات
+ */
+export interface ICloudinaryFile extends Express.Multer.File {
+  path: string;
 }
