@@ -6,6 +6,15 @@ import upload from "../../../middlewares/cloudinary";
 
 const router: Router = Router();
 
+// ~ Get => /api/hackit/ctrl/student/accountprofilestudent/:id ~ Get Profile Student
+
+router
+  .route("/accountprofilestudent/:id")
+  .get(
+    verifyToken,
+    checkRole(["student"]),
+    ctrlStudentController.getProfileStudent
+  );
 // ~ Post => /api/hackit/ctrl/student/sendemailpassword ~ Send Email For Password For Student
 router
   .route("/sendemailpassword")

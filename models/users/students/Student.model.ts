@@ -1,6 +1,6 @@
 import mongoose, { Schema, Model } from "mongoose";
 import joi from "joi";
-import { IOtp, IProfilePhoto, IStudent } from "./dtos";
+import { IOtp, IStudent } from "./dtos";
 import bcrypt from "bcrypt";
 
 // Student Schema

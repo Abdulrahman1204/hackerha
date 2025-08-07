@@ -8,6 +8,15 @@ import {
 } from "../../../middlewares/handleErrors";
 
 class CtrlStudentController {
+  // ~ Get => /api/hackit/ctrl/student/accountprofilestudent ~ Get Profile Student
+  getProfileStudent = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const result = await CtrlStudentService.getProfileStudent(req.params.id);
+
+      res.status(200).json(result);
+    }
+  );
+
   // ~ Post => /api/hackit/ctrl/student/sendemailpassword ~ Send Email For Password For Student
   sendEmailForPasswordStudent = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {

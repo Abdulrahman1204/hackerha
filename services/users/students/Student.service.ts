@@ -19,6 +19,26 @@ import bcrypt from "bcrypt";
 import { ICloudinaryFile } from "../../../utils/types";
 
 class CtrlStudentService {
+  // ~ Get => /api/hackit/ctrl/student/accountprofilestudent ~ Get Profile Student
+  static async getProfileStudent(id: string) {
+    const existingInactiveById = await Student.findById(id)
+    if (!existingInactiveById) {
+      throw new BadRequestError("المستخدم غير موجود");
+    }
+
+    if (!existingInactiveById.available) {
+      throw new BadRequestError("الحساب غير مفعل");
+    }
+
+    if (existingInactiveById.suspended) {
+      throw new BadRequestError("حسابك مقيد");
+    }
+
+    const student = await Student.findById(id).select('-password -otp -suspended -available -resetPass -createdAt -updatedAt -__v');
+
+    return student;
+  }
+
   // ~ Post => /api/hackit/ctrl/student/sendemailpassword ~ Send Email For Password For Student
   static async SendEmailForPasswordStudent(studentData: IStudent) {
     const { error } = validateSendEmail(studentData);
@@ -35,7 +55,7 @@ class CtrlStudentService {
     }
 
     if (!existingInactiveByEmail.available) {
-      throw new BadRequestError("الحساب غير بالفعل");
+      throw new BadRequestError("الحساب غير مفعل");
     }
 
     if (existingInactiveByEmail.suspended) {
@@ -81,7 +101,7 @@ class CtrlStudentService {
     }
 
     if (!existingInactiveById.available) {
-      throw new BadRequestError("الحساب غير بالفعل");
+      throw new BadRequestError("الحساب غير مفعل");
     }
 
     if (existingInactiveById.suspended) {
@@ -116,7 +136,7 @@ class CtrlStudentService {
     }
 
     if (!existingInactiveById.available) {
-      throw new BadRequestError("الحساب غير بالفعل");
+      throw new BadRequestError("الحساب غير مفعل");
     }
 
     if (existingInactiveById.suspended) {
@@ -171,7 +191,7 @@ class CtrlStudentService {
     }
 
     if (!existingInactiveById.available) {
-      throw new BadRequestError("الحساب غير بالفعل");
+      throw new BadRequestError("الحساب غير مفعل");
     }
 
     if (existingInactiveById.suspended) {
@@ -212,7 +232,7 @@ class CtrlStudentService {
     }
 
     if (!existingInactiveById.available) {
-      throw new BadRequestError("الحساب غير بالفعل");
+      throw new BadRequestError("الحساب غير مفعل");
     }
 
     if (existingInactiveById.suspended) {
@@ -250,7 +270,7 @@ class CtrlStudentService {
     }
 
     if (!existingInactiveById.available) {
-      throw new BadRequestError("الحساب غير بالفعل");
+      throw new BadRequestError("الحساب غير مفعل");
     }
 
     if (existingInactiveById.suspended) {
@@ -288,7 +308,7 @@ class CtrlStudentService {
     }
 
     if (!existingInactiveById.available) {
-      throw new BadRequestError("الحساب غير بالفعل");
+      throw new BadRequestError("الحساب غير مفعل");
     }
 
     if (existingInactiveById.suspended) {
@@ -331,7 +351,7 @@ class CtrlStudentService {
     }
 
     if (!existingInactiveById.available) {
-      throw new BadRequestError("الحساب غير بالفعل");
+      throw new BadRequestError("الحساب غير مفعل");
     }
 
     if (existingInactiveById.suspended) {

@@ -1,4 +1,4 @@
-import { Document, Types } from "mongoose";
+import { Document } from "mongoose";
 
 export interface IStudent extends Document {
   profilePhoto: string;
@@ -20,8 +20,4 @@ export interface IStudent extends Document {
 
 export interface IOtp extends Document {
   otp: string;
-}
-
-export interface IProfilePhoto extends Document {
-  profilePhoto: { url: string; publicId: string | null };
 }
