@@ -17,7 +17,7 @@ class CtrlStudentController {
       if (user?.id !== targetUserId) {
         throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
       }
-      
+
       const result = await CtrlStudentService.getProfileStudent(targetUserId);
 
       res.status(200).json(result);
@@ -137,6 +137,42 @@ class CtrlStudentController {
       );
 
       res.status(200).json({ message: result.message });
+    }
+  );
+
+  // ~ patch /api/hackit/ctrl/student/favorite/course/:courseId/toggle/:id
+  toggleFavoriteCourse = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response) => {
+      const user = (req as AuthenticatedRequest).user;
+      const targetUserId = req.params.id;
+
+      if (user?.id !== targetUserId) {
+        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
+      }
+
+      const result = await CtrlStudentService.toggleFavoriteCourse(
+        targetUserId,
+        req.params.courseId
+      );
+      res.status(200).json(result);
+    }
+  );
+
+  // ~ patch /api/hackit/ctrl/student/favorite/session/:sessionId/toggle/:id
+  toggleFavoriteSession = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response) => {
+      const user = (req as AuthenticatedRequest).user;
+      const targetUserId = req.params.id;
+
+      if (user?.id !== targetUserId) {
+        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
+      }
+
+      const result = await CtrlStudentService.toggleFavoriteSession(
+        targetUserId,
+        req.params.sessionId
+      );
+      res.status(200).json(result);
     }
   );
 }

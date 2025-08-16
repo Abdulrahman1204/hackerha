@@ -40,16 +40,12 @@ router
 // ~ Put => /api/hackit/ctrl/student/UpdateProfileImpStudentAdmin/:id ~ Change important details of student
 router
   .route("/updateprofileimpstudentadmin/:id")
-  .put(
-    ctrlStudentController.UpdateProfileImpStudentAdmin
-  );
+  .put(ctrlStudentController.UpdateProfileImpStudentAdmin);
 
 // ~ Put => /api/hackit/ctrl/student/UpdateProfileSuspendedStudent/:id ~ Change Suspended of student
 router
   .route("/UpdateProfileSuspendedStudent/:id")
-  .put(
-    ctrlStudentController.UpdateProfileSuspendedStudent
-  );
+  .put(ctrlStudentController.UpdateProfileSuspendedStudent);
 
 // ~ Put => /api/hackit/ctrl/student/updateimageprofile/:id ~ Change Image of student
 router
@@ -69,5 +65,21 @@ router
     checkRole(["student"]),
     ctrlStudentController.DeleteStudentAccount
   );
+
+// ~ patch /api/hackit/ctrl/student/favorite/course/:courseId/toggle/:id
+router.patch(
+  "/favorite/course/:courseId/toggle/:id",
+  verifyToken,
+  checkRole(["student"]),
+  ctrlStudentController.toggleFavoriteCourse
+);
+
+// ~ patch /api/hackit/ctrl/student/favorite/session/:sessionId/toggle/:id
+router.patch(
+  "/favorite/session/:sessionId/toggle/:id",
+  verifyToken,
+  checkRole(["student"]),
+  ctrlStudentController.toggleFavoriteSession
+);
 
 export default router;

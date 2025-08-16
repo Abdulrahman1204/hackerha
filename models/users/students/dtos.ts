@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export interface IStudent extends Document {
   profilePhoto: string;
@@ -17,6 +17,8 @@ export interface IStudent extends Document {
   resetPass: boolean;
   suspensionReason: string;
   suspensionEnd: Date;
+  favoriteCourses: Types.ObjectId[];
+  favoriteSessions: Types.ObjectId[];
 }
 
 export interface IOtp extends Document {

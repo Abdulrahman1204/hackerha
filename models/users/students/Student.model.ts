@@ -85,6 +85,20 @@ const StudentSchema = new Schema<IStudent>(
       default: false,
     },
     suspensionReason: String,
+    favoriteCourses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Course",
+        default: [],
+      },
+    ],
+    favoriteSessions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Session",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,

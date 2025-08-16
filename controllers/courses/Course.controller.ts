@@ -63,7 +63,7 @@ class CtrlCourseController {
 
     // Get filtered courses
     const courses = await CtrlCourseService.getAllCourses(filters);
-    
+
     res.status(200).json(courses);
   });
 

@@ -1,6 +1,6 @@
 import { Document, Types } from "mongoose";
 
-export interface ISesson extends Document {
+export interface ISession extends Document {
   courseId: Types.ObjectId;
   video: string;
   name: string;

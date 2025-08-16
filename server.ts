@@ -16,7 +16,7 @@ import routeCtrlStudent from "./routes/users/students/Student.route";
 
 // route import course
 import routeCourse from "./routes/course/Course.route";
-import routeSesson from "./routes/course/sesson/Sesson.route";
+import routeSession from "./routes/course/session/Session.route";
 import routeComment from "./routes/course/comment/Comment.route";
 import routeExam from "./routes/course/exam/Exam.route";
 import routeQuestion from "./routes/course/exam/question/Question.route";
@@ -81,7 +81,7 @@ app.use("/api/hackit/ctrl/student", routeCtrlStudent);
 
 // Student Routes Student
 app.use("/api/hackit/ctrl/course", routeCourse);
-app.use("/api/hackit/ctrl/sesson", routeSesson);
+app.use("/api/hackit/ctrl/session", routeSession);
 app.use("/api/hackit/ctrl/comment", routeComment);
 app.use("/api/hackit/ctrl/exam", routeExam);
 app.use("/api/hackit/ctrl/examQuestion", routeQuestion);

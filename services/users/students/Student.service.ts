@@ -17,6 +17,9 @@ import { sendEmail } from "../../../utils/mailer";
 import { html } from "../../../utils/mailHtml";
 import bcrypt from "bcrypt";
 import { ICloudinaryFile } from "../../../utils/types";
+import { Course } from "../../../models/courses/Course.model";
+import { Types } from "mongoose";
+import { Session } from "../../../models/courses/session/Session.model";
 
 class CtrlStudentService {
   // ~ Get => /api/hackit/ctrl/student/accountprofilestudent ~ Get Profile Student
@@ -34,9 +37,11 @@ class CtrlStudentService {
       throw new BadRequestError("حسابك مقيد");
     }
 
-    const student = await Student.findById(id).select(
-      "-password -otp -suspended -available -resetPass -createdAt -updatedAt -__v"
-    );
+    const student = await Student.findById(id)
+      .select(
+        "-password -otp -suspended -available -resetPass -createdAt -updatedAt -__v"
+      )
+      .populate("favoriteCourses favoriteSessions");
 
     return student;
   }
@@ -369,6 +374,83 @@ class CtrlStudentService {
 
     return {
       message: "تم حذف الحساب بنجاح",
+    };
+  }
+
+  // ~ patch /api/hackit/ctrl/student/favorite/course/:courseId/toggle/:id
+  static async toggleFavoriteCourse(
+    studentId: string,
+    courseId: string
+  ): Promise<{ message: string; action: "added" | "removed" }> {
+    const student = await Student.findById(studentId);
+    if (!student) throw new NotFoundError("الطالب غير موجود");
+
+    const course = await Course.findById(courseId);
+    if (!course) throw new NotFoundError("الكورس غير موجود");
+
+    const courseObjectId = new Types.ObjectId(courseId);
+    const index = student.favoriteCourses.indexOf(courseObjectId);
+
+    let action: "added" | "removed";
+
+    if (index === -1) {
+      // إضافة إلى المفضلة
+      student.favoriteCourses.push(courseObjectId);
+      action = "added";
+    } else {
+      // إزالة من المفضلة
+      student.favoriteCourses.splice(index, 1);
+      action = "removed";
+    }
+
+    await student.save();
+
+    return {
+      message:
+        action === "added"
+          ? "تمت إضافة الكورس إلى المفضلة"
+          : "تمت إزالة الكورس من المفضلة",
+      action,
+    };
+  }
+
+  // ~ patch /api/hackit/ctrl/student/favorite/session/:sessionId/toggle/:id
+  static async toggleFavoriteSession(
+    studentId: string,
+    sessionId: string
+  ): Promise<{
+    message: string;
+    action: "added" | "removed";
+  }> {
+    const student = await Student.findById(studentId);
+    if (!student) throw new NotFoundError("الطالب غير موجود");
+
+    const session = await Session.findById(sessionId);
+    if (!session) throw new NotFoundError("الجلسة غير موجودة");
+
+    const sessionObjectId = new Types.ObjectId(sessionId);
+    const index = student.favoriteSessions.indexOf(sessionObjectId);
+
+    let action: "added" | "removed";
+
+    if (index === -1) {
+      // إضافة إلى المفضلة
+      student.favoriteSessions.push(sessionObjectId);
+      action = "added";
+    } else {
+      // إزالة من المفضلة
+      student.favoriteSessions.splice(index, 1);
+      action = "removed";
+    }
+
+    await student.save();
+
+    return {
+      message:
+        action === "added"
+          ? "تمت إضافة الجلسة إلى المفضلة"
+          : "تمت إزالة الجلسة من المفضلة",
+      action,
     };
   }
 }

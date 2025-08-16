@@ -1,9 +1,9 @@
 import mongoose, { Schema, Model } from "mongoose";
 import joi from "joi";
-import { ISesson } from "./dtos";
+import { ISession } from "./dtos";
 
-// Sesson Schema
-const SessonSchema = new Schema<ISesson>(
+// Session Schema
+const SessionSchema = new Schema<ISession>(
   {
     courseId: {
       type: Schema.Types.ObjectId,
@@ -54,15 +54,18 @@ const SessonSchema = new Schema<ISesson>(
   { timestamps: true }
 );
 
-// Sesson Model
-const Sesson: Model<ISesson> = mongoose.model<ISesson>("Sesson", SessonSchema);
+// Session Model
+const Session: Model<ISession> = mongoose.model<ISession>(
+  "Session",
+  SessionSchema
+);
 
-// Sesson Indexes
-SessonSchema.index({ courseId: 1 });
-SessonSchema.index({ createdAt: -1 });
+// Session Indexes
+SessionSchema.index({ courseId: 1 });
+SessionSchema.index({ createdAt: -1 });
 
-// Validation: Create Sesson
-const validateCreateSesson = (obj: ISesson): joi.ValidationResult => {
+// Validation: Create Session
+const validateCreateSession = (obj: ISession): joi.ValidationResult => {
   const schema = joi.object({
     courseId: joi.string().required().messages({
       "string.empty": "الكورس مطلوب",
@@ -131,8 +134,10 @@ const validateCreateSesson = (obj: ISesson): joi.ValidationResult => {
   return schema.validate(obj);
 };
 
-// Validation: Update Sesson
-const validateUpdateSesson = (obj: Partial<ISesson>): joi.ValidationResult => {
+// Validation: Update Session
+const validateUpdateSession = (
+  obj: Partial<ISession>
+): joi.ValidationResult => {
   const schema = joi.object({
     courseId: joi.string().messages({
       "string.empty": "الكورس مطلوب",
@@ -199,4 +204,4 @@ const validateUpdateSesson = (obj: Partial<ISesson>): joi.ValidationResult => {
   return schema.validate(obj);
 };
 
-export { Sesson, validateCreateSesson, validateUpdateSesson };
+export { Session, validateCreateSession, validateUpdateSession };
