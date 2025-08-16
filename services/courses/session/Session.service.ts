@@ -50,7 +50,7 @@ class CtrlSessionService {
   static async getSessionsByCourseId(courseId: string) {
     const sessons = await Session.find({ courseId });
 
-    const courseHave = await Course.findById(courseId);
+    const courseHave = await Course.findById(courseId).sort({ createdAt: -1 });
     if (!courseHave) {
       throw new NotFoundError("الكورس غير موجود");
     }

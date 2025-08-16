@@ -83,7 +83,7 @@ class CommentService {
         new: true,
         runValidators: true,
       }
-    ).populate("studentId", "userName profilePhoto");
+    ).populate("studentId", "userName profilePhoto createdAt");
 
     if (!updatedComment) throw new NotFoundError("فشل تحديث التعليق");
 
