@@ -7,7 +7,7 @@ const router: Router = Router();
 
 // POST /api/comment - Create comment (Student)
 router
-  .route('"/"')
+  .route("/")
   .post(verifyToken, checkRole(["student"]), commentController.createComment);
 
 // GET /api/comment/course/:courseId - Get course comments (Public)

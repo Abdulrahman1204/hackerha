@@ -7,6 +7,7 @@ import {
 } from "../../models/courses/Course.model";
 import { ICloudinaryFile } from "../../utils/types";
 import { Comment } from "../../models/courses/comment/Comment.model";
+import { Session } from "../../models/courses/session/Session.model";
 
 class CtrlCourseService {
   // ~ POST /api/hackit/ctrl/course - Create a new course
@@ -54,9 +55,14 @@ class CtrlCourseService {
       .populate("studentId", "userName profilePhoto")
       .sort({ createdAt: -1 });
 
+    const session = await Session.find({ courseId: id }).sort({
+      createdAt: -1,
+    });
+
     const courseWithComments = {
       ...course.toObject(),
       comments,
+      session,
     };
 
     return courseWithComments;
@@ -110,7 +116,7 @@ class CtrlCourseService {
     if (!updatedCourse) throw new NotFoundError("فشل تحديث الكورس");
 
     return {
-      message: "تم تحديث الكورس بنجاح"
+      message: "تم تحديث الكورس بنجاح",
     };
   }
 
@@ -132,7 +138,7 @@ class CtrlCourseService {
     );
 
     if (!updatedCourse) throw new NotFoundError("فشل تحديث صورة الكورس");
-    
+
     return { message: "تم تحديث صورة الكورس بنجاح" };
   }
 }
