@@ -10,9 +10,18 @@ import compression from "compression";
 // .env
 dotenv.config();
 
-// routes import
+// routes import student
 import routeAuthStudent from "./routes/users/students/Auth.route";
 import routeCtrlStudent from "./routes/users/students/Student.route";
+
+// route import course
+import routeCourse from "./routes/course/Course.route";
+import routeSesson from "./routes/course/sesson/Sesson.route";
+import routeComment from "./routes/course/comment/Comment.route";
+import routeExam from "./routes/course/exam/Exam.route";
+import routeQuestion from "./routes/course/exam/question/Question.route";
+
+
 
 // Validate required environment variables
 const requiredEnvVars = [
@@ -23,7 +32,7 @@ const requiredEnvVars = [
   "EMAIL_USER",
   "EMAIL_PASS",
   "OTP_PEPPER",
-  "JWT_SECRET_KEY"
+  "JWT_SECRET_KEY",
 ];
 
 requiredEnvVars.forEach((env) => {
@@ -66,9 +75,18 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
-// Student Routes
+// Student Routes Student
 app.use("/api/hackit/ctrl/student", routeAuthStudent);
 app.use("/api/hackit/ctrl/student", routeCtrlStudent);
+
+// Student Routes Student
+app.use("/api/hackit/ctrl/course", routeCourse);
+app.use("/api/hackit/ctrl/sesson", routeSesson);
+app.use("/api/hackit/ctrl/comment", routeComment);
+app.use("/api/hackit/ctrl/exam", routeExam);
+app.use("/api/hackit/ctrl/examQuestion", routeQuestion);
+
+
 
 // Error Handler Middleware
 app.use(notFound);

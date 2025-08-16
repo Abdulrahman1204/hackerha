@@ -1,12 +1,9 @@
 import { Document } from "mongoose";
 
-export interface IStudent extends Document {
+export interface ITeacher extends Document {
   profilePhoto: string;
   userName: string;
   phoneNumber: string;
-  university: "جامعة قرطبة" | "جامعة إيبلا" | "جامعة الشهباء" | "جامعة حلب";
-  academicYear: Date;
-  universityNumber: number;
   gender: "ذكر" | "انثى";
   birth: Date;
   email: string;

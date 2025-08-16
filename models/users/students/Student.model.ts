@@ -4,11 +4,12 @@ import { IOtp, IStudent } from "./dtos";
 import bcrypt from "bcrypt";
 
 // Student Schema
-const StudentSchema = new Schema(
+const StudentSchema = new Schema<IStudent>(
   {
     profilePhoto: {
       type: String,
-      default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+      default:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       required: true,
     },
     userName: {
@@ -34,15 +35,24 @@ const StudentSchema = new Schema(
         message:
           "الجامعة يجب ان تكون ( جامعة حلب أو جامعة الشهباء أو جامعة إيبلا أو جامعة قرطبة )",
       },
+      required: [true, "الجامعة مطلوبة"],
     },
     academicYear: {
       type: Date,
       required: [true, "السنة الدراسية مطلوبة"],
     },
     universityNumber: {
-      type: String,
+      type: Number,
       required: [true, "الرقم الجامعي مطلوب"],
       trim: true,
+    },
+    gender: {
+      type: String,
+      enum: {
+        values: ["ذكر", "انثى"],
+        message: "يحب أن يكون ذكر أو انثى",
+      },
+      required: [true, "نوع الجنس مطلوب"],
     },
     birth: {
       type: Date,
@@ -81,12 +91,6 @@ const StudentSchema = new Schema(
   }
 );
 
-// Student Model
-const Student: Model<IStudent> = mongoose.model<IStudent>(
-  "Student",
-  StudentSchema
-);
-
 // Password encryption
 StudentSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -99,6 +103,12 @@ StudentSchema.pre("save", async function (next) {
     next(err);
   }
 });
+
+// Student Model
+const Student: Model<IStudent> = mongoose.model<IStudent>(
+  "Student",
+  StudentSchema
+);
 
 // Student Indexes
 StudentSchema.index({ createdAt: -1 });
@@ -141,11 +151,15 @@ const validateCreateStudent = (obj: IStudent): joi.ValidationResult => {
           "الجامعة يجب ان تكون ( جامعة حلب أو جامعة الشهباء أو جامعة إيبلا أو جامعة قرطبة )",
         "any.required": "الجامعة مطلوبة",
       }),
+    gender: joi.string().valid("ذكر", "انثى").required().messages({
+      "any.only": "يحب أن يكون ذكر أو انثى",
+      "any.required": "نوع الجنس مطلوب",
+    }),
     academicYear: joi.date().required().messages({
       "date.base": "صيغة السنة الدراسية غير صحيحة",
       "any.required": "السنة الدراسية مطلوبة",
     }),
-    universityNumber: joi.string().required().messages({
+    universityNumber: joi.number().required().messages({
       "string.empty": "الرقم الجامعي مطلوب",
       "any.required": "الرقم الجامعي مطلوب",
     }),
@@ -286,7 +300,7 @@ const validateUpdateImportantStudent = (
       "date.base": "صيغة السنة الدراسية غير صحيحة",
       "any.required": "السنة الدراسية مطلوبة",
     }),
-    universityNumber: joi.string().required().messages({
+    universityNumber: joi.number().required().messages({
       "string.empty": "الرقم الجامعي مطلوب",
       "any.required": "الرقم الجامعي مطلوب",
     }),
@@ -331,5 +345,5 @@ export {
   validateResetPass,
   validatePasswourd,
   validateUpdateSuspendedStudent,
-  validateUpdateImportantStudent
+  validateUpdateImportantStudent,
 };

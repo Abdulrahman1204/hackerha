@@ -8,10 +8,17 @@ import {
 } from "../../../middlewares/handleErrors";
 
 class CtrlStudentController {
-  // ~ Get => /api/hackit/ctrl/student/accountprofilestudent ~ Get Profile Student
+  // ~ Get => /api/hackit/ctrl/student/accountprofilestudent/:id ~ Get Profile Student
   getProfileStudent = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const result = await CtrlStudentService.getProfileStudent(req.params.id);
+      const user = (req as AuthenticatedRequest).user;
+      const targetUserId = req.params.id;
+
+      if (user?.id !== targetUserId) {
+        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
+      }
+      
+      const result = await CtrlStudentService.getProfileStudent(targetUserId);
 
       res.status(200).json(result);
     }
@@ -71,12 +78,7 @@ class CtrlStudentController {
   // ~ Put => /api/hackit/ctrl/student/UpdateProfileSuspendedStudent/:id ~ Change Suspended of student
   UpdateProfileSuspendedStudent = asyncHandler(
     async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-      const user = (req as AuthenticatedRequest).user;
       const targetUserId = req.params.id;
-
-      if (user?.role !== "admin" && user?.role !== "helper") {
-        throw new ForbiddenError("غير مصرح لك بتقييد الحساب");
-      }
 
       const result = await CtrlStudentService.UpdateProfileSuspendedStudent(
         req.body,
@@ -90,12 +92,7 @@ class CtrlStudentController {
   // ~ Put => /api/hackit/ctrl/student/UpdateProfileImpStudentAdmin/:id ~ Change important details of student
   UpdateProfileImpStudentAdmin = asyncHandler(
     async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-      const user = (req as AuthenticatedRequest).user;
       const targetUserId = req.params.id;
-
-      if (user?.role !== "admin" && user?.role !== "helper") {
-        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
-      }
 
       const result = await CtrlStudentService.UpdateProfileImpStudentAdmin(
         req.body,
@@ -131,11 +128,7 @@ class CtrlStudentController {
       const user = (req as AuthenticatedRequest).user;
       const targetUserId = req.params.id;
 
-      if (
-        user?.id !== targetUserId &&
-        user?.role !== "admin" &&
-        user?.role !== "helper"
-      ) {
+      if (user?.id !== targetUserId) {
         throw new ForbiddenError("غير مصرح لك بحذف الحساب");
       }
 

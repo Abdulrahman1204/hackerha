@@ -14,7 +14,6 @@ import { generateJWT } from "../../../utils/generateToken";
 import { sendEmail } from "../../../utils/mailer";
 import { html } from "../../../utils/mailHtml";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 class AuthStudentService {
   // ~ Post => /api/hackit/ctrl/student/register ~ Create New Student
@@ -54,6 +53,7 @@ class AuthStudentService {
       university: studentData.university,
       academicYear: studentData.academicYear,
       universityNumber: studentData.universityNumber,
+      gender: studentData.gender,
       birth: studentData.birth,
       email: studentData.email,
       password: studentData.password,
@@ -97,12 +97,11 @@ class AuthStudentService {
     }
 
     const isValidOtp = await OTPUtils.verifyOTP(otpData.otp, student.otp);
-    console.log({isValidOtp: isValidOtp})
+    console.log({ isValidOtp: isValidOtp });
     if (!isValidOtp) {
       throw new BadRequestError("رمز التحقق غير صحيح");
     }
 
-  
     const token = generateJWT({
       id: studentId,
       role: "student",

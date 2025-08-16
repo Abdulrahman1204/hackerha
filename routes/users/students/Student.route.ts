@@ -41,8 +41,6 @@ router
 router
   .route("/updateprofileimpstudentadmin/:id")
   .put(
-    verifyToken,
-    checkRole(["admin", "helper"]),
     ctrlStudentController.UpdateProfileImpStudentAdmin
   );
 
@@ -50,8 +48,6 @@ router
 router
   .route("/UpdateProfileSuspendedStudent/:id")
   .put(
-    verifyToken,
-    checkRole(["admin", "helper"]),
     ctrlStudentController.UpdateProfileSuspendedStudent
   );
 
@@ -70,7 +66,7 @@ router
   .route("/account/:id")
   .delete(
     verifyToken,
-    checkRole(["student", "admin", "helper"]),
+    checkRole(["student"]),
     ctrlStudentController.DeleteStudentAccount
   );
 

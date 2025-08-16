@@ -21,7 +21,7 @@ import { ICloudinaryFile } from "../../../utils/types";
 class CtrlStudentService {
   // ~ Get => /api/hackit/ctrl/student/accountprofilestudent ~ Get Profile Student
   static async getProfileStudent(id: string) {
-    const existingInactiveById = await Student.findById(id)
+    const existingInactiveById = await Student.findById(id);
     if (!existingInactiveById) {
       throw new BadRequestError("المستخدم غير موجود");
     }
@@ -34,7 +34,9 @@ class CtrlStudentService {
       throw new BadRequestError("حسابك مقيد");
     }
 
-    const student = await Student.findById(id).select('-password -otp -suspended -available -resetPass -createdAt -updatedAt -__v');
+    const student = await Student.findById(id).select(
+      "-password -otp -suspended -available -resetPass -createdAt -updatedAt -__v"
+    );
 
     return student;
   }
@@ -286,6 +288,7 @@ class CtrlStudentService {
           university: studentData.university,
           academicYear: studentData.academicYear,
           universityNumber: studentData.universityNumber,
+          gender: studentData.gender,
           birth: studentData.birth,
           email: studentData.email,
         },
