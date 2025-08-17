@@ -24,6 +24,7 @@ import routeQuestion from "./routes/course/exam/question/Question.route";
 // route import bank
 import routeBank from "./routes/banks/Bank.route";
 import routeContent from "./routes/banks/content/Content.route";
+import routeQuestionBank from "./routes/banks/content/question/QuestionBank.route";
 
 // Validate required environment variables
 const requiredEnvVars = [
@@ -91,6 +92,7 @@ app.use("/api/hackit/ctrl/examQuestion", routeQuestion);
 // Routes Bank
 app.use("/api/hackit/ctrl/bank", routeBank);
 app.use("/api/hackit/ctrl/content", routeContent);
+app.use("/api/hackit/ctrl/questionBank", routeQuestionBank);
 
 
 // Error Handler Middleware

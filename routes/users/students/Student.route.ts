@@ -82,4 +82,12 @@ router.patch(
   ctrlStudentController.toggleFavoriteSession
 );
 
+// ~ patch /api/hackit/ctrl/student/favorite/bank/:bankId/toggle/:id
+router.patch(
+  "/favorite/bank/:bankId/toggle/:id",
+  verifyToken,
+  checkRole(["student"]),
+  ctrlStudentController.toggleFavoriteBank
+);
+
 export default router;

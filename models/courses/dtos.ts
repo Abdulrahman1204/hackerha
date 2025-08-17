@@ -6,7 +6,7 @@ export interface ICourse extends Document {
   description: string;
   price: number;
   note: string;
-  type: "نظري" | "عملي";
+  type: "نظري" | "عملي" | "شاملة";
   discount: {
     dis: boolean;
     rate: number;

@@ -1,6 +1,6 @@
 import mongoose, { Schema, Model } from "mongoose";
 import joi from "joi";
-import { IQuestion } from "./dtos";
+import { IQuestionBank } from "./dtos";
 
 // Answer Schema
 const answerSchema = new Schema({
@@ -35,13 +35,13 @@ const requestSchema = new Schema({
   },
 });
 
-// Question Schema
-const QuestionSchema = new Schema<IQuestion>(
+// Question Bacnk Schema
+const QuestionBacnkSchema = new Schema<IQuestionBank>(
   {
-    examId: {
+    contentId: {
       type: Schema.Types.ObjectId,
-      ref: "Exam",
-      required: [true, "معرف الامتحان مطلوب"],
+      ref: "Content",
+      required: [true, "معرف المحتوى مطلوب"],
     },
     text: {
       type: String,
@@ -65,21 +65,21 @@ const QuestionSchema = new Schema<IQuestion>(
 );
 
 // Question Model
-const Question: Model<IQuestion> = mongoose.model<IQuestion>(
-  "Question",
-  QuestionSchema
+const QuestionBank: Model<IQuestionBank> = mongoose.model<IQuestionBank>(
+  "QuestionBank",
+  QuestionBacnkSchema
 );
 
 // Indexes
-QuestionSchema.index({ examId: 1 });
-QuestionSchema.index({ createdAt: -1 });
+QuestionBacnkSchema.index({ contentId: 1 });
+QuestionBacnkSchema.index({ createdAt: -1 });
 
-// Validation: Create Question
-const validateCreateQuestion = (obj: IQuestion): joi.ValidationResult => {
+// Validation: Create Question Bank
+const validateCreateQuestionBank = (obj: IQuestionBank): joi.ValidationResult => {
   const schema = joi.object({
-    examId: joi.string().required().messages({
-      "string.empty": "معرف الامتحان مطلوب",
-      "any.required": "معرف الامتحان مطلوب",
+    contentId: joi.string().required().messages({
+      "string.empty": "معرف المحتوى مطلوب",
+      "any.required": "معرف المحتوى مطلوب",
     }),
     text: joi.string().required().messages({
       "string.empty": "نص السؤال مطلوب",
@@ -135,14 +135,14 @@ const validateCreateQuestion = (obj: IQuestion): joi.ValidationResult => {
   return schema.validate(obj);
 };
 
-// Validation: Update Question
-const validateUpdateQuestion = (
-  obj: Partial<IQuestion>
+// Validation: Update Question Bank
+const validateUpdateQuestionBank = (
+  obj: Partial<IQuestionBank>
 ): joi.ValidationResult => {
   const schema = joi.object({
-    examId: joi.string().messages({
-      "string.empty": "معرف الامتحان مطلوب",
-      "any.required": "معرف الامتحان مطلوب",
+    contentId: joi.string().messages({
+      "string.empty": "معرف المحتوى مطلوب",
+      "any.required": "معرف المحتوى مطلوب",
     }),
     text: joi.string().messages({
       "string.empty": "نص السؤال مطلوب",
@@ -194,4 +194,4 @@ const validateUpdateQuestion = (
   return schema.validate(obj);
 };
 
-export { Question, validateCreateQuestion, validateUpdateQuestion };
+export { QuestionBank, validateCreateQuestionBank, validateUpdateQuestionBank };

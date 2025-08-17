@@ -20,6 +20,7 @@ import { ICloudinaryFile } from "../../../utils/types";
 import { Course } from "../../../models/courses/Course.model";
 import { Types } from "mongoose";
 import { Session } from "../../../models/courses/session/Session.model";
+import { Bank } from "../../../models/banks/Bank.model";
 
 class CtrlStudentService {
   // ~ Get => /api/hackit/ctrl/student/accountprofilestudent ~ Get Profile Student
@@ -450,6 +451,46 @@ class CtrlStudentService {
         action === "added"
           ? "تمت إضافة الجلسة إلى المفضلة"
           : "تمت إزالة الجلسة من المفضلة",
+      action,
+    };
+  }
+
+  // ~ patch /api/hackit/ctrl/student/favorite/bank/:bankId/toggle/:id
+  static async toggleFavoriteBank(
+    studentId: string,
+    bankId: string
+  ): Promise<{
+    message: string;
+    action: "added" | "removed";
+  }> {
+    const student = await Student.findById(studentId);
+    if (!student) throw new NotFoundError("الطالب غير موجود");
+
+    const bank = await Bank.findById(bankId);
+    if (!bank) throw new NotFoundError("البنك غير موجودة");
+
+    const bankObjectId = new Types.ObjectId(bankId);
+    const index = student.favoriteBank.indexOf(bankObjectId);
+
+    let action: "added" | "removed";
+
+    if (index === -1) {
+      // إضافة إلى المفضلة
+      student.favoriteBank.push(bankObjectId);
+      action = "added";
+    } else {
+      // إزالة من المفضلة
+      student.favoriteBank.splice(index, 1);
+      action = "removed";
+    }
+
+    await student.save();
+
+    return {
+      message:
+        action === "added"
+          ? "تمت إضافة البنك إلى المفضلة"
+          : "تمت إزالة البنك من المفضلة",
       action,
     };
   }

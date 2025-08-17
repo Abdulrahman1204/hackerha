@@ -19,6 +19,7 @@ export interface IStudent extends Document {
   suspensionEnd: Date;
   favoriteCourses: Types.ObjectId[];
   favoriteSessions: Types.ObjectId[];
+  favoriteBank: Types.ObjectId[];
 }
 
 export interface IOtp extends Document {

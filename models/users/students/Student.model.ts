@@ -99,6 +99,13 @@ const StudentSchema = new Schema<IStudent>(
         default: [],
       },
     ],
+    favoriteBank: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Bank",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,

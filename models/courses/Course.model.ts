@@ -47,7 +47,7 @@ const CourseSchema = new Schema<ICourse>(
     type: {
       type: String,
       enum: {
-        values: ["نظري", "عملي"],
+        values: ["نظري", "عملي", "شاملة"],
         message: "يجب ان يكون نظري او عملي",
       },
       required: [true, "نوع الكورس مطلوب"],
@@ -125,7 +125,7 @@ const validateCreateCourse = (obj: ICourse): joi.ValidationResult => {
     note: joi.string().max(200).messages({
       "string.max": "الملاحظات يجب ألا تتجاوز 200 حرف",
     }),
-    type: joi.string().valid("نظري", "عملي").required().messages({
+    type: joi.string().valid("نظري", "عملي", "شاملة").required().messages({
       "any.only": "يجب ان يكون نوع الكورس نظري أو عملي",
       "any.required": "نوع الكورس مطلوب",
     }),
@@ -197,8 +197,8 @@ const validateUpdateCourse = (obj: Partial<ICourse>): joi.ValidationResult => {
       "number.min": "الفصل الدراسي يجب أن يكون 1 أو 2",
       "number.max": "الفصل الدراسي يجب أن يكون 1 أو 2",
     }),
-    type: joi.string().valid("نظري", "عملي").messages({
-      "any.only": "يجب ان يكون نوع الكورس نظري أو عملي",
+    type: joi.string().valid("نظري", "عملي", "شاملة").messages({
+      "any.only": "يجب ان يكون نوع الكورس نظري أو عملي او شاملة",
     }),
     discount: joi
       .object({
