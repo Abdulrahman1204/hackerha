@@ -45,7 +45,7 @@ const SessionSchema = new Schema<ISession>(
         type: { type: String, required: true },
       },
     ],
-    durationByHour: {
+    durationByMin: {
       type: Number,
       required: [true, "مدة الفيديو مطلوبة"],
       min: [1, "يجب أن يكون عدد الساعات أكبر من 0"],
@@ -124,7 +124,7 @@ const validateCreateSession = (obj: ISession): joi.ValidationResult => {
       .messages({
         "array.base": "يجب أن تكون الملفات مصفوفة من الكائنات",
       }),
-    durationByHour: joi.number().required().min(1).messages({
+      durationByMin: joi.number().required().min(1).messages({
       "number.empty": "مدة الفيديو مطلوبة",
       "any.required": "مدة الفيديو مطلوبة",
       "number.min": "يجب أن يكون عدد الساعات أكبر من 0",
@@ -194,7 +194,7 @@ const validateUpdateSession = (
       .messages({
         "array.base": "يجب أن تكون الملفات مصفوفة من الكائنات",
       }),
-    durationByHour: joi.number().min(1).messages({
+      durationByMin: joi.number().min(1).messages({
       "number.empty": "مدة الفيديو مطلوبة",
       "any.required": "مدة الفيديو مطلوبة",
       "number.min": "يجب أن يكون عدد الساعات أكبر من 0",

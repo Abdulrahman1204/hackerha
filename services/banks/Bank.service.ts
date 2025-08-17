@@ -4,6 +4,7 @@ import {
   validateCreateBank,
   validateUpdateBank,
 } from "../../models/banks/Bank.model";
+import { Content } from "../../models/banks/content/Content.model";
 import { IBanks } from "../../models/banks/dtos";
 import { ICloudinaryFile } from "../../utils/types";
 
@@ -29,7 +30,15 @@ class CtrlBanksService {
     if (!bank) {
       throw new NotFoundError("البنك غير موجود");
     }
-    return bank;
+
+    const contents = await Content.find({ bank: id }).sort({ createdAt: -1 });
+
+    const bankWithContents = {
+      ... bank.toObject(),
+      contents
+    }
+
+    return bankWithContents;
   }
 
   // ~ Post => /api/hackit/ctrl/banks ~ Create New Bank
@@ -98,7 +107,7 @@ class CtrlBanksService {
       throw new BadRequestError("الصورة مطلوبة");
     }
 
-    console.log(file.path)
+    console.log(file.path);
 
     const updatedBank = await Bank.findByIdAndUpdate(
       id,
