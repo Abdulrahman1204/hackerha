@@ -195,3 +195,4 @@ const validateUpdateQuestionBank = (
 };
 
 export { QuestionBank, validateCreateQuestionBank, validateUpdateQuestionBank };
+

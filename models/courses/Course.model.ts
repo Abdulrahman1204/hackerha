@@ -28,16 +28,26 @@ const CourseSchema = new Schema<ICourse>(
       min: [0, "السعر لا يمكن أن يكون سالبًا"],
     },
     year: {
-      type: Number,
+      type: String,
+      enum: {
+        values: [
+          "سنة اولى",
+          "سنة ثانية",
+          "سنة ثالثة",
+          "سنة الرابعة",
+          "سنة الخامسة",
+        ],
+        message: "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+      },
       required: [true, "السنة الدراسية مطلوبة"],
-      min: [1, "السنة الدراسية يجب أن تكون بين 1 و 5"],
-      max: [5, "السنة الدراسية يجب أن تكون بين 1 و 5"],
     },
     semester: {
-      type: Number,
+      type: String,
+      enum: {
+        values: ["فصل اول", "فصل ثاني"],
+        message: "يجب ان يكون فصل اول او فصل ثاني",
+      },
       required: [true, "الفصل الدراسي مطلوب"],
-      min: [1, "الفصل الدراسي يجب أن يكون 1 أو 2"],
-      max: [2, "الفصل الدراسي يجب أن يكون 1 أو 2"],
     },
     note: {
       type: String,
@@ -110,23 +120,23 @@ const validateCreateCourse = (obj: ICourse): joi.ValidationResult => {
       "number.min": "السعر لا يمكن أن يكون سالبًا",
       "any.required": "سعر الكورس مطلوب",
     }),
-    year: joi.number().min(1).max(5).required().messages({
-      "number.base": "السنة الدراسية يجب أن تكون رقمًا",
-      "number.min": "السنة الدراسية يجب أن تكون بين 1 و 5",
-      "number.max": "السنة الدراسية يجب أن تكون بين 1 و 5",
-      "any.required": "السنة الدراسية مطلوبة",
-    }),
-    semester: joi.number().min(1).max(2).required().messages({
-      "number.base": "الفصل الدراسي يجب أن يكون رقمًا",
-      "number.min": "الفصل الدراسي يجب أن يكون 1 أو 2",
-      "number.max": "الفصل الدراسي يجب أن يكون 1 أو 2",
+    year: joi
+      .string()
+      .valid("سنة اولى", "سنة ثانية", "سنة ثالثة", "سنة الرابعة", "سنة الخامسة")
+      .required()
+      .messages({
+        "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+        "any.required": "السنة الدراسية مطلوبة",
+      }),
+    semester: joi.string().valid("فصل اول", "فصل ثاني").required().messages({
+      "any.only": "يجب ان يكون فصل اول او فصل ثاني",
       "any.required": "الفصل الدراسي مطلوب",
     }),
     note: joi.string().max(200).messages({
       "string.max": "الملاحظات يجب ألا تتجاوز 200 حرف",
     }),
     type: joi.string().valid("نظري", "عملي", "شاملة").required().messages({
-      "any.only": "يجب ان يكون نظري او عملي أو شامل",
+      "any.only": "يجب ان يكون نظري او عملي أو شاملة",
       "any.required": "نوع الكورس مطلوب",
     }),
     discount: joi
@@ -187,18 +197,17 @@ const validateUpdateCourse = (obj: Partial<ICourse>): joi.ValidationResult => {
     note: joi.string().max(200).messages({
       "string.max": "الملاحظات يجب ألا تتجاوز 200 حرف",
     }),
-    year: joi.number().min(1).max(5).messages({
-      "number.base": "السنة الدراسية يجب أن تكون رقمًا",
-      "number.min": "السنة الدراسية يجب أن تكون بين 1 و 5",
-      "number.max": "السنة الدراسية يجب أن تكون بين 1 و 5",
-    }),
-    semester: joi.number().min(1).max(2).messages({
-      "number.base": "الفصل الدراسي يجب أن يكون رقمًا",
-      "number.min": "الفصل الدراسي يجب أن يكون 1 أو 2",
-      "number.max": "الفصل الدراسي يجب أن يكون 1 أو 2",
+    year: joi
+      .string()
+      .valid("سنة اولى", "سنة ثانية", "سنة ثالثة", "سنة الرابعة", "سنة الخامسة")
+      .messages({
+        "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+      }),
+    semester: joi.string().valid("فصل اول", "فصل ثاني").messages({
+      "any.only": "يجب ان يكون فصل اول او فصل ثاني",
     }),
     type: joi.string().valid("نظري", "عملي", "شاملة").messages({
-      "any.only": "يجب ان يكون نظري او عملي أو شامل",
+      "any.only": "يجب ان يكون نظري او عملي أو شاملة",
     }),
     discount: joi
       .object({

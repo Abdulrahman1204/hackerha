@@ -311,25 +311,24 @@ const validateUpdateImportantStudent = (
     university: joi
       .string()
       .valid("جامعة قرطبة", "جامعة إيبلا", "جامعة الشهباء", "جامعة حلب")
-      .required()
       .messages({
         "any.only":
           "الجامعة يجب ان تكون ( جامعة حلب أو جامعة الشهباء أو جامعة إيبلا أو جامعة قرطبة )",
         "any.required": "الجامعة مطلوبة",
       }),
-    academicYear: joi.date().required().messages({
+    academicYear: joi.date().messages({
       "date.base": "صيغة السنة الدراسية غير صحيحة",
       "any.required": "السنة الدراسية مطلوبة",
     }),
-    universityNumber: joi.number().required().messages({
+    universityNumber: joi.number().messages({
       "string.empty": "الرقم الجامعي مطلوب",
       "any.required": "الرقم الجامعي مطلوب",
     }),
-    birth: joi.date().required().messages({
+    birth: joi.date().messages({
       "date.base": "تاريخ الميلاد غير صالح",
       "any.required": "تاريخ الميلاد مطلوب",
     }),
-    email: joi.string().email().min(3).max(100).required().messages({
+    email: joi.string().email().min(3).max(100).messages({
       "string.email": "البريد الإلكتروني غير صالح",
       "string.empty": "البريد الإلكتروني مطلوب",
       "string.min": "البريد الإلكتروني يجب أن يكون على الأقل 3 أحرف",

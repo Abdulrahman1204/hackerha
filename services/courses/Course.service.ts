@@ -75,8 +75,10 @@ class CtrlCourseService {
     hasDiscount?: boolean;
     year?: number;
     semester?: number;
+    createdLessThanDays?: number;
   }) {
-    const { name, type, hasDiscount, year, semester } = queryParams;
+    const { name, type, hasDiscount, year, semester, createdLessThanDays } =
+      queryParams;
 
     const filter: any = {};
 
@@ -85,6 +87,12 @@ class CtrlCourseService {
     if (hasDiscount !== undefined) filter["discount.dis"] = hasDiscount;
     if (year) filter.year = year;
     if (semester) filter.semester = semester;
+
+    if (createdLessThanDays) {
+      const dateThreshold = new Date();
+      dateThreshold.setDate(dateThreshold.getDate() - createdLessThanDays);
+      filter.createdAt = { $gte: dateThreshold };
+    }
 
     const courses = await Course.find(filter)
       .sort({ createdAt: -1 })

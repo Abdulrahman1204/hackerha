@@ -12,7 +12,7 @@ export interface IStudent extends Document {
   email: string;
   password: string;
   otp: string;
-  available: boolean;
+  available: boolean; 
   suspended: boolean;
   resetPass: boolean;
   suspensionReason: string;

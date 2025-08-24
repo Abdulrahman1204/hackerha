@@ -13,6 +13,7 @@ dotenv.config();
 // routes import student
 import routeAuthStudent from "./routes/users/students/Auth.route";
 import routeCtrlStudent from "./routes/users/students/Student.route";
+import routeResult from './routes/result/Result.route'
 
 // route import course
 import routeCourse from "./routes/course/Course.route";
@@ -81,6 +82,8 @@ app.get("/health", (req: Request, res: Response) => {
 // Routes Student
 app.use("/api/hackit/ctrl/student", routeAuthStudent);
 app.use("/api/hackit/ctrl/student", routeCtrlStudent);
+app.use("/api/hackit/ctrl/result", routeResult);
+
 
 // Routes Course
 app.use("/api/hackit/ctrl/course", routeCourse);

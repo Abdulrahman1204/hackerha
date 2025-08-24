@@ -16,3 +16,4 @@ export interface IQuestionBank extends Document {
     }
   ];
 }
+

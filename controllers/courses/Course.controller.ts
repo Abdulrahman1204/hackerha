@@ -23,11 +23,12 @@ class CtrlCourseController {
 
   // ~ GET /api/hackit/ctrl/course - Get all courses
   getAllCourses = asyncHandler(async (req: Request, res: Response) => {
-    const { name, type, hasDiscount, year, semester } = req.query;
+    const { name, type, hasDiscount, year, semester, createdLessThanDays } =
+      req.query;
 
     // Validate type if provided
     if (type && !["نظري", "عملي"].includes(type as string)) {
-      throw new BadRequestError('نوع الكورس يجب أن يكون "نظري" أو "عملي"');
+      throw new BadRequestError("يجب ان يكون نظري او عملي أو شامل");
     }
 
     // Validate year if provided
@@ -52,6 +53,19 @@ class CtrlCourseController {
       }
     }
 
+    if (createdLessThanDays) {
+      const daysNum = parseInt(createdLessThanDays as string);
+      if (isNaN(daysNum)) {
+        throw new BadRequestError("عدد الأيام يجب أن يكون رقماً");
+      }
+      if (daysNum < 1) {
+        throw new BadRequestError("عدد الأيام يجب أن يكون أكبر من صفر");
+      }
+      if (daysNum > 365) {
+        throw new BadRequestError("عدد الأيام يجب أن يكون أقل من أو يساوي 365");
+      }
+    }
+
     // Prepare filters object
     const filters = {
       name: name as string,
@@ -59,6 +73,9 @@ class CtrlCourseController {
       hasDiscount: hasDiscount ? hasDiscount === "true" : undefined,
       year: year ? parseInt(year as string) : undefined,
       semester: semester ? parseInt(semester as string) : undefined,
+      createdLessThanDays: createdLessThanDays
+        ? parseInt(createdLessThanDays as string)
+        : undefined,
     };
 
     // Get filtered courses
