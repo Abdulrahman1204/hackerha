@@ -12,15 +12,64 @@ class CtrlBanksService {
   // ~ Get => /api/hackit/ctrl/banks ~ Get All Banks
   static async getAllBanks(queryParams: { name?: string; year?: number }) {
     const { name, year } = queryParams;
-
+    const match: Record<string, any> = {};
     const filter: any = {};
 
     if (name) filter.name = { $regex: name, $options: "i" };
     if (year) filter.year = year;
 
-    const banks = await Bank.find(filter)
-      .sort({ createdAt: -1 })
-      .select("-__v");
+    const banks = await Bank.aggregate([
+      { $match: match },
+      { $sort: { createdAt: -1 } },
+
+      // Pull all contents for each bank
+      {
+        $lookup: {
+          from: "contents", // Mongoose pluralizes 'Content' -> 'contents'
+          localField: "_id",
+          foreignField: "bank",
+          as: "contents",
+        },
+      },
+
+      // Count contents
+      {
+        $addFields: {
+          contentCount: { $size: "$contents" },
+        },
+      },
+
+      // Count questions per content (and total) using contentIds
+      {
+        $lookup: {
+          from: "questionbanks", // plural of 'QuestionBank'
+          let: { contentIds: "$contents._id" },
+          pipeline: [
+            { $match: { $expr: { $in: ["$contentId", "$$contentIds"] } } },
+            { $group: { _id: "$contentId", count: { $sum: 1 } } }, // one doc per contentId with its question count
+          ],
+          as: "questionsByContent",
+        },
+      },
+
+      // Map per-content counts & compute total
+      {
+        $addFields: {
+          totalQuestions: {
+            $ifNull: [{ $sum: "$questionsByContent.count" }, 0],
+          },
+        },
+      },
+
+      // Clean up heavy arrays
+      {
+        $project: {
+          __v: 0,
+          contents: 0,
+          questionsByContent: 0,
+        },
+      },
+    ]);
     return banks;
   }
 
@@ -34,9 +83,9 @@ class CtrlBanksService {
     const contents = await Content.find({ bank: id }).sort({ createdAt: -1 });
 
     const bankWithContents = {
-      ... bank.toObject(),
-      contents
-    }
+      ...bank.toObject(),
+      contents,
+    };
 
     return bankWithContents;
   }

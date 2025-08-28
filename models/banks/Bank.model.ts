@@ -17,16 +17,26 @@ const BankSchema = new Schema<IBanks>(
       maxlength: [100, "العنوان يجب ألا يتجاوز 100 حرف"],
     },
     year: {
-      type: Number,
+      type: String,
+      enum: {
+        values: [
+          "السنة الأولى",
+          "السنة الثانية",
+          "السنة الثالثة",
+          "السنة الرابعة",
+          "السنة الخامسة",
+        ],
+        message: "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+      },
       required: [true, "السنة الدراسية مطلوبة"],
-      min: [1, "السنة الدراسية يجب أن تكون على الأقل 1"],
-      max: [5, "السنة الدراسية يجب ألا تتجاوز 5"],
     },
     semester: {
-      type: Number,
+      type: String,
+      enum: {
+        values: ["الفصل الأول", "الفصل الثاني"],
+        message: "يجب ان يكون فالفصل الأول او الفصل الثاني",
+      },
       required: [true, "الفصل الدراسي مطلوب"],
-      min: [1, "الفصل الدراسي يجب أن يكون على الأقل 1"],
-      max: [2, "الفصل الدراسي يجب ألا يتجاوز 2"],
     },
     free: {
       type: Boolean,
@@ -53,18 +63,28 @@ const validateCreateBank = (obj: IBanks): joi.ValidationResult => {
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
       "any.required": "عنوان البنك مطلوب",
     }),
-    year: joi.number().min(1).max(5).required().messages({
-      "number.base": "السنة الدراسية يجب أن تكون رقماً",
-      "number.min": "السنة الدراسية يجب أن تكون على الأقل 1",
-      "number.max": "السنة الدراسية يجب ألا تتجاوز 5",
-      "any.required": "السنة الدراسية مطلوبة",
-    }),
-    semester: joi.number().min(1).max(2).required().messages({
-      "number.base": "الفصل الدراسي يجب أن يكون رقماً",
-      "number.min": "الفصل الدراسي يجب أن يكون على الأقل 1",
-      "number.max": "الفصل الدراسي يجب ألا يتجاوز 2",
-      "any.required": "الفصل الدراسي مطلوب",
-    }),
+    year: joi
+      .string()
+      .valid(
+        "السنة الأولى",
+        "السنة الثانية",
+        "السنة الثالثة",
+        "السنة الرابعة",
+        "السنة الخامسة"
+      )
+      .required()
+      .messages({
+        "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+        "any.required": "السنة الدراسية مطلوبة",
+      }),
+    semester: joi
+      .string()
+      .valid("الفصل الأول", "الفصل الثاني")
+      .required()
+      .messages({
+        "any.only": "يجب ان يكون الفصل الأول او الفصل الثاني",
+        "any.required": "الفصل الدراسي مطلوب",
+      }),
     free: joi.boolean().default(true),
   });
 
@@ -81,15 +101,20 @@ const validateUpdateBank = (obj: Partial<IBanks>): joi.ValidationResult => {
       "string.empty": "عنوان البنك مطلوب",
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
     }),
-    year: joi.number().min(1).max(5).messages({
-      "number.base": "السنة الدراسية يجب أن تكون رقماً",
-      "number.min": "السنة الدراسية يجب أن تكون على الأقل 1",
-      "number.max": "السنة الدراسية يجب ألا تتجاوز 5",
-    }),
-    semester: joi.number().min(1).max(2).messages({
-      "number.base": "الفصل الدراسي يجب أن يكون رقماً",
-      "number.min": "الفصل الدراسي يجب أن يكون على الأقل 1",
-      "number.max": "الفصل الدراسي يجب ألا يتجاوز 2",
+    year: joi
+      .string()
+      .valid(
+        "السنة الأولى",
+        "السنة الثانية",
+        "السنة الثالثة",
+        "السنة الرابعة",
+        "السنة الخامسة"
+      )
+      .messages({
+        "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+      }),
+    semester: joi.string().valid("الفصل الأول", "الفصل الثاني").messages({
+      "any.only": "يجب ان يكون الفصل الأول او الفصل الثاني",
     }),
     free: joi.boolean(),
   });

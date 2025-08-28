@@ -16,10 +16,9 @@ const ExamSchema = new Schema<IExam>(
       trim: true,
       maxlength: [100, "العنوان يجب ألا يتجاوز 100 حرف"],
     },
-    durationByMin: {
-      type: Number,
+    duration: {
+      type: String,
       required: [true, "مدة الفيديو مطلوبة"],
-      min: [1, "يجب أن يكون عدد الساعات أكبر من 0"],
     },
   },
   { timestamps: true }
@@ -44,10 +43,9 @@ const validateCreateExam = (obj: IExam): joi.ValidationResult => {
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
       "any.required": "عنوان الامتحان مطلوب",
     }),
-    durationByMin: joi.number().required().min(1).messages({
-      "number.empty": "مدة الفيديو مطلوبة",
+    duration: joi.number().required().min(1).messages({
+      "string.empty": "مدة الفيديو مطلوبة",
       "any.required": "مدة الفيديو مطلوبة",
-      "number.min": "يجب أن يكون عدد الساعات أكبر من 0",
     }),
   });
 
@@ -65,10 +63,9 @@ const validateUpdateExam = (obj: Partial<IExam>): joi.ValidationResult => {
       "string.empty": "عنوان الامتحان مطلوب",
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
     }),
-    durationByMin: joi.number().min(1).messages({
-      "number.empty": "مدة الفيديو مطلوبة",
+    duration: joi.number().min(1).messages({
+      "string.empty": "مدة الفيديو مطلوبة",
       "any.required": "مدة الفيديو مطلوبة",
-      "number.min": "يجب أن يكون عدد الساعات أكبر من 0",
     }),
   });
 

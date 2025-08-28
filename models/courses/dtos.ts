@@ -11,8 +11,8 @@ export interface ICourse extends Document {
     dis: boolean;
     rate: number;
   };
-  year: "سنة اولى" | "سنة ثانية" | "سنة ثالثة" | "سنة الرابعة" | "سنة الخامسة";
-  semester: "فصل اول" | "فصل ثاني";
+  year: "السنة الأولى" | "السنة الثانية" | "السنة الثالثة" | "السنة الرابعة" | "السنة الخامسة";
+  semester: "الفصل الأول" | "الفصل الثاني";
   rating: number;
   about: string;
   video: string;

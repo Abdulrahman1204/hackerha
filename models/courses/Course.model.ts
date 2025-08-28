@@ -31,11 +31,11 @@ const CourseSchema = new Schema<ICourse>(
       type: String,
       enum: {
         values: [
-          "سنة اولى",
-          "سنة ثانية",
-          "سنة ثالثة",
-          "سنة الرابعة",
-          "سنة الخامسة",
+          "السنة الأولى",
+          "السنة الثانية",
+          "السنة الثالثة",
+          "السنة الرابعة",
+          "السنة الخامسة",
         ],
         message: "يجب ان يكون من السنة الاولى الى السنة الخامسة",
       },
@@ -44,8 +44,8 @@ const CourseSchema = new Schema<ICourse>(
     semester: {
       type: String,
       enum: {
-        values: ["فصل اول", "فصل ثاني"],
-        message: "يجب ان يكون فصل اول او فصل ثاني",
+        values: ["الفصل الأول", "الفصل الثاني"],
+        message: "يجب ان يكون فالفصلصل الأول او الفصل الثاني",
       },
       required: [true, "الفصل الدراسي مطلوب"],
     },
@@ -122,16 +122,26 @@ const validateCreateCourse = (obj: ICourse): joi.ValidationResult => {
     }),
     year: joi
       .string()
-      .valid("سنة اولى", "سنة ثانية", "سنة ثالثة", "سنة الرابعة", "سنة الخامسة")
+      .valid(
+        "السنة الأولى",
+        "السنة الثانية",
+        "السنة الثالثة",
+        "السنة الرابعة",
+        "السنة الخامسة"
+      )
       .required()
       .messages({
         "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
         "any.required": "السنة الدراسية مطلوبة",
       }),
-    semester: joi.string().valid("فصل اول", "فصل ثاني").required().messages({
-      "any.only": "يجب ان يكون فصل اول او فصل ثاني",
-      "any.required": "الفصل الدراسي مطلوب",
-    }),
+    semester: joi
+      .string()
+      .valid("فصل الأول", "فصل الثاني")
+      .required()
+      .messages({
+        "any.only": "يجب ان يكون فصل الأول او فصل الثاني",
+        "any.required": "الفصل الدراسي مطلوب",
+      }),
     note: joi.string().max(200).messages({
       "string.max": "الملاحظات يجب ألا تتجاوز 200 حرف",
     }),
@@ -199,12 +209,18 @@ const validateUpdateCourse = (obj: Partial<ICourse>): joi.ValidationResult => {
     }),
     year: joi
       .string()
-      .valid("سنة اولى", "سنة ثانية", "سنة ثالثة", "سنة الرابعة", "سنة الخامسة")
+      .valid(
+        "السنة الأولى",
+        "السنة الثانية",
+        "السنة الثالثة",
+        "السنة الرابعة",
+        "السنة الخامسة"
+      )
       .messages({
         "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
       }),
-    semester: joi.string().valid("فصل اول", "فصل ثاني").messages({
-      "any.only": "يجب ان يكون فصل اول او فصل ثاني",
+    semester: joi.string().valid("فصل الأول", "فصل الثاني").messages({
+      "any.only": "يجب ان يكون فصل الأول او فصل الثاني",
     }),
     type: joi.string().valid("نظري", "عملي", "شاملة").messages({
       "any.only": "يجب ان يكون نظري او عملي أو شاملة",

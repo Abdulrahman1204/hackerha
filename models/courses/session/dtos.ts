@@ -12,5 +12,5 @@ export interface ISession extends Document {
     name: string;
     type: string;
   }[];
-  durationByMin: number;
+  duration: string;
 }

@@ -16,10 +16,9 @@ const ContentSchema = new Schema<IContent>(
       trim: true,
       maxlength: [100, "العنوان يجب ألا يتجاوز 100 حرف"],
     },
-    durationByMin: {
-      type: Number,
+    duration: {
+      type: String,
       required: [true, "المدة بالدقائق مطلوبة"],
-      min: [1, "المدة يجب أن تكون على الأقل دقيقة واحدة"],
     },
   },
   {
@@ -45,9 +44,8 @@ const validateCreateContent = (obj: IContent): joi.ValidationResult => {
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
       "any.required": "العنوان مطلوب",
     }),
-    durationByMin: joi.number().min(1).required().messages({
-      "number.base": "المدة يجب أن تكون رقماً",
-      "number.min": "المدة يجب أن تكون على الأقل دقيقة واحدة",
+    duration: joi.string().min(1).required().messages({
+      "string.base": "المدة يجب أن تكون رقماً",
       "any.required": "المدة بالدقائق مطلوبة",
     }),
   });
@@ -69,9 +67,8 @@ const validateUpdateContent = (
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
       "any.required": "العنوان مطلوب",
     }),
-    durationByMin: joi.number().min(1).messages({
-      "number.base": "المدة يجب أن تكون رقماً",
-      "number.min": "المدة يجب أن تكون على الأقل دقيقة واحدة",
+    duration: joi.string().min(1).messages({
+      "string.base": "المدة يجب أن تكون رقماً",
       "any.required": "المدة بالدقائق مطلوبة",
     }),
   });
