@@ -494,6 +494,52 @@ class CtrlStudentService {
       action,
     };
   }
+
+  // ~ Get => /api/univers/ctrl/student/check-existence ~ Check if phone, email, or university number exists
+  static async checkStudentExistence(checkData: {
+    phoneNumber?: string;
+    email?: string;
+    universityNumber?: number;
+  }) {
+    const { phoneNumber, email, universityNumber } = checkData;
+
+    if (!phoneNumber && !email && !universityNumber) {
+      throw new BadRequestError(
+        "يجب تقديم رقم الهاتف أو البريد الإلكتروني أو الرقم الجامعي للتحقق"
+      );
+    }
+
+    const existenceResults: any = {};
+
+    if (phoneNumber) {
+      // Validate phone number format
+      if (!/^09[0-9]{8}$/.test(phoneNumber)) {
+        throw new BadRequestError(
+          "رقم الهاتف غير صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام."
+        );
+      }
+      const phoneExists = await Student.findOne({ phoneNumber });
+      existenceResults.phoneNumberExists = !!phoneExists;
+    }
+
+    if (email) {
+      // Basic email validation
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new BadRequestError("صيغة البريد الإلكتروني غير صحيحة");
+      }
+      const emailExists = await Student.findOne({ email });
+      existenceResults.emailExists = !!emailExists;
+    }
+
+    if (universityNumber) {
+      const universityNumberExists = await Student.findOne({
+        universityNumber,
+      });
+      existenceResults.universityNumberExists = !!universityNumberExists;
+    }
+
+    return existenceResults;
+  }
 }
 
 export { CtrlStudentService };

@@ -90,4 +90,9 @@ router.patch(
   ctrlStudentController.toggleFavoriteBank
 );
 
+// ~ Get => /api/univers/ctrl/student/check-existence ~ Check if phone, email, or university number exists
+router
+  .route("/check-existence")
+  .get(ctrlStudentController.checkStudentExistence);
+
 export default router;

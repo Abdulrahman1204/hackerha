@@ -141,55 +141,66 @@ class CtrlStudentController {
   );
 
   // ~ patch /api/hackit/ctrl/student/favorite/course/:courseId/toggle/:id
-  toggleFavoriteCourse = asyncHandler(
-    async (req: Request, res: Response) => {
-      const user = (req as AuthenticatedRequest).user;
-      const targetUserId = req.params.id;
+  toggleFavoriteCourse = asyncHandler(async (req: Request, res: Response) => {
+    const user = (req as AuthenticatedRequest).user;
+    const targetUserId = req.params.id;
 
-      if (user?.id !== targetUserId) {
-        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
-      }
-
-      const result = await CtrlStudentService.toggleFavoriteCourse(
-        targetUserId,
-        req.params.courseId
-      );
-      res.status(200).json(result);
+    if (user?.id !== targetUserId) {
+      throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
     }
-  );
+
+    const result = await CtrlStudentService.toggleFavoriteCourse(
+      targetUserId,
+      req.params.courseId
+    );
+    res.status(200).json(result);
+  });
 
   // ~ patch /api/hackit/ctrl/student/favorite/session/:sessionId/toggle/:id
-  toggleFavoriteSession = asyncHandler(
-    async (req: Request, res: Response) => {
-      const user = (req as AuthenticatedRequest).user;
-      const targetUserId = req.params.id;
+  toggleFavoriteSession = asyncHandler(async (req: Request, res: Response) => {
+    const user = (req as AuthenticatedRequest).user;
+    const targetUserId = req.params.id;
 
-      if (user?.id !== targetUserId) {
-        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
-      }
-
-      const result = await CtrlStudentService.toggleFavoriteSession(
-        targetUserId,
-        req.params.sessionId
-      );
-      res.status(200).json(result);
+    if (user?.id !== targetUserId) {
+      throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
     }
-  );
+
+    const result = await CtrlStudentService.toggleFavoriteSession(
+      targetUserId,
+      req.params.sessionId
+    );
+    res.status(200).json(result);
+  });
 
   // ~ patch /api/hackit/ctrl/student/favorite/bank/:bankId/toggle/:id
-  toggleFavoriteBank = asyncHandler(
-    async (req: Request, res: Response) => {
-      const user = (req as AuthenticatedRequest).user;
-      const targetUserId = req.params.id;
+  toggleFavoriteBank = asyncHandler(async (req: Request, res: Response) => {
+    const user = (req as AuthenticatedRequest).user;
+    const targetUserId = req.params.id;
 
-      if (user?.id !== targetUserId) {
-        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
-      }
+    if (user?.id !== targetUserId) {
+      throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
+    }
 
-      const result = await CtrlStudentService.toggleFavoriteBank(
-        targetUserId,
-        req.params.bankId
-      );
+    const result = await CtrlStudentService.toggleFavoriteBank(
+      targetUserId,
+      req.params.bankId
+    );
+    res.status(200).json(result);
+  });
+
+  // ~ Get => /api/univers/ctrl/student/check-existence ~ Check if phone, email, or university number exists
+  checkStudentExistence = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { phoneNumber, email, universityNumber } = req.query;
+
+      const result = await CtrlStudentService.checkStudentExistence({
+        phoneNumber: phoneNumber as string,
+        email: email as string,
+        universityNumber: universityNumber
+          ? Number(universityNumber)
+          : undefined,
+      });
+
       res.status(200).json(result);
     }
   );
