@@ -28,15 +28,6 @@ const StudentSchema = new Schema<IStudent>(
           `${props.value} ليس رقم هاتف صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام.`,
       },
     },
-    university: {
-      type: String,
-      enum: {
-        values: ["جامعة قرطبة", "جامعة إيبلا", "جامعة الشهباء", "جامعة حلب"],
-        message:
-          "الجامعة يجب ان تكون ( جامعة حلب أو جامعة الشهباء أو جامعة إيبلا أو جامعة قرطبة )",
-      },
-      required: [true, "الجامعة مطلوبة"],
-    },
     academicYear: {
       type: Date,
       required: [true, "السنة الدراسية مطلوبة"],
@@ -106,6 +97,13 @@ const StudentSchema = new Schema<IStudent>(
         default: [],
       },
     ],
+    enrolledCourses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Course",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,
@@ -162,15 +160,6 @@ const validateCreateStudent = (obj: IStudent): joi.ValidationResult => {
           "رقم الهاتف غير صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام.",
         "string.empty": "رقم الهاتف مطلوب",
         "any.required": "رقم الهاتف مطلوب",
-      }),
-    university: joi
-      .string()
-      .valid("جامعة قرطبة", "جامعة إيبلا", "جامعة الشهباء", "جامعة حلب")
-      .required()
-      .messages({
-        "any.only":
-          "الجامعة يجب ان تكون ( جامعة حلب أو جامعة الشهباء أو جامعة إيبلا أو جامعة قرطبة )",
-        "any.required": "الجامعة مطلوبة",
       }),
     gender: joi.string().valid("ذكر", "انثى").required().messages({
       "any.only": "يحب أن يكون ذكر أو انثى",
@@ -307,14 +296,6 @@ const validateUpdateImportantStudent = (
           "رقم الهاتف غير صالح! يجب أن يبدأ بـ 09 ويتكون من 10 أرقام.",
         "string.empty": "رقم الهاتف مطلوب",
         "any.required": "رقم الهاتف مطلوب",
-      }),
-    university: joi
-      .string()
-      .valid("جامعة قرطبة", "جامعة إيبلا", "جامعة الشهباء", "جامعة حلب")
-      .messages({
-        "any.only":
-          "الجامعة يجب ان تكون ( جامعة حلب أو جامعة الشهباء أو جامعة إيبلا أو جامعة قرطبة )",
-        "any.required": "الجامعة مطلوبة",
       }),
     academicYear: joi.date().messages({
       "date.base": "صيغة السنة الدراسية غير صحيحة",

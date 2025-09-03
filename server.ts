@@ -20,12 +20,17 @@ import routeCourse from "./routes/course/Course.route";
 import routeSession from "./routes/course/session/Session.route";
 import routeComment from "./routes/course/comment/Comment.route";
 import routeExam from "./routes/course/exam/Exam.route";
-// import routeQuestion from "./routes/course/exam/question/Question.route";
+import routeRequest from './routes/course/exam/request/Request.route'
+import routeQuestion from "./routes/course/exam/question/Question.route";
 
 // route import bank
 import routeBank from "./routes/banks/Bank.route";
 import routeContent from "./routes/banks/content/Content.route";
-// import routeQuestionBank from "./routes/banks/content/question/QuestionBank.route";
+import routeQuestionBank from "./routes/banks/content/question/QuestionBank.route";
+import routeRequestBank from './routes/banks/content/request/RequestBank.route'
+
+// route import payment
+import routePayment from "./routes/payment/Payment.route";
 
 // Validate required environment variables
 const requiredEnvVars = [
@@ -90,13 +95,17 @@ app.use("/api/hackit/ctrl/course", routeCourse);
 app.use("/api/hackit/ctrl/session", routeSession);
 app.use("/api/hackit/ctrl/comment", routeComment);
 app.use("/api/hackit/ctrl/exam", routeExam);
-// app.use("/api/hackit/ctrl/examQuestion", routeQuestion);
+app.use("/api/hackit/ctrl/examRequest", routeRequest);
+app.use("/api/hackit/ctrl/examQuestion", routeQuestion);
 
 // Routes Bank
 app.use("/api/hackit/ctrl/bank", routeBank);
 app.use("/api/hackit/ctrl/content", routeContent);
-// app.use("/api/hackit/ctrl/questionBank", routeQuestionBank);
+app.use("/api/hackit/ctrl/questionBank", routeQuestionBank);
+app.use("/api/hackit/ctrl/requestBank", routeRequestBank);
 
+// Routes Payment
+app.use("/api/hackit/ctrl/payment", routePayment);
 
 // Error Handler Middleware
 app.use(notFound);

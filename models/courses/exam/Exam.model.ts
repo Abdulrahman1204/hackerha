@@ -43,7 +43,7 @@ const validateCreateExam = (obj: IExam): joi.ValidationResult => {
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
       "any.required": "عنوان الامتحان مطلوب",
     }),
-    duration: joi.number().required().min(1).messages({
+    duration: joi.string().required().min(1).messages({
       "string.empty": "مدة الفيديو مطلوبة",
       "any.required": "مدة الفيديو مطلوبة",
     }),
@@ -63,7 +63,7 @@ const validateUpdateExam = (obj: Partial<IExam>): joi.ValidationResult => {
       "string.empty": "عنوان الامتحان مطلوب",
       "string.max": "العنوان يجب ألا يتجاوز 100 حرف",
     }),
-    duration: joi.number().min(1).messages({
+    duration: joi.string().min(1).messages({
       "string.empty": "مدة الفيديو مطلوبة",
       "any.required": "مدة الفيديو مطلوبة",
     }),

@@ -45,7 +45,7 @@ const CourseSchema = new Schema<ICourse>(
       type: String,
       enum: {
         values: ["الفصل الأول", "الفصل الثاني"],
-        message: "يجب ان يكون فالفصلصل الأول او الفصل الثاني",
+        message: "يجب ان يكون الفصل الأول او الفصل الثاني",
       },
       required: [true, "الفصل الدراسي مطلوب"],
     },
@@ -93,6 +93,17 @@ const CourseSchema = new Schema<ICourse>(
       type: Boolean,
       default: false,
     },
+    available: {
+      type: Boolean,
+      default: false,
+    },
+    students: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Student",
+        default: [],
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -136,10 +147,10 @@ const validateCreateCourse = (obj: ICourse): joi.ValidationResult => {
       }),
     semester: joi
       .string()
-      .valid("فصل الأول", "فصل الثاني")
+      .valid("الفصل الأول", "الفصل الثاني")
       .required()
       .messages({
-        "any.only": "يجب ان يكون فصل الأول او فصل الثاني",
+        "any.only": "يجب ان يكون الفصل الأول او الفصل الثاني",
         "any.required": "الفصل الدراسي مطلوب",
       }),
     note: joi.string().max(200).messages({
@@ -257,6 +268,9 @@ const validateUpdateCourse = (obj: Partial<ICourse>): joi.ValidationResult => {
     free: joi.boolean().messages({
       "boolean.base": "يجب أن تكون قيمة free صحيحة أو خاطئة",
     }),
+    available: joi.boolean().messages({
+      "boolean.base": "يجب أن تكون قيمة free صحيحة أو خاطئة",
+    })
   });
 
   return schema.validate(obj);

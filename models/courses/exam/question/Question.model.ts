@@ -22,8 +22,18 @@ const QuestionSchema = new Schema<IQuestion>(
       default: "",
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+QuestionSchema.virtual("requests", {
+  ref: "Request",
+  localField: "_id",
+  foreignField: "questionId",
+});
 
 // Question Model
 const Question: Model<IQuestion> = mongoose.model<IQuestion>(

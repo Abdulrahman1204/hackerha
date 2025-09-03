@@ -50,7 +50,6 @@ class AuthStudentService {
     const student = await Student.create({
       userName: studentData.userName,
       phoneNumber: studentData.phoneNumber,
-      university: studentData.university,
       academicYear: studentData.academicYear,
       universityNumber: studentData.universityNumber,
       gender: studentData.gender,

@@ -39,10 +39,15 @@ class CtrlStudentService {
     }
 
     const student = await Student.findById(id)
-      .select(
-        "-password -otp -suspended -available -resetPass -createdAt -updatedAt -__v"
-      )
-      .populate("favoriteCourses favoriteSessions");
+    .select(
+      "-password -otp -suspended -available -resetPass -createdAt -updatedAt -__v"
+    )
+    .populate("favoriteCourses favoriteSessions")
+    .populate({
+      path: "enrolledCourses",
+      select: "name image description price rating year semester type discount free available", // Select the fields you want
+      options: { sort: { createdAt: -1 } } // Optional: sort courses
+    });
 
     return student;
   }
@@ -291,7 +296,6 @@ class CtrlStudentService {
         $set: {
           userName: studentData.userName,
           phoneNumber: studentData.phoneNumber,
-          university: studentData.university,
           academicYear: studentData.academicYear,
           universityNumber: studentData.universityNumber,
           gender: studentData.gender,
@@ -520,6 +524,9 @@ class CtrlStudentService {
       }
       const phoneExists = await Student.findOne({ phoneNumber });
       existenceResults.phoneNumberExists = !!phoneExists;
+      if (existenceResults.phoneNumberExists) {
+        existenceResults.message = "رقم الهاتف موجود بالفعل";
+      }
     }
 
     if (email) {
@@ -529,6 +536,9 @@ class CtrlStudentService {
       }
       const emailExists = await Student.findOne({ email });
       existenceResults.emailExists = !!emailExists;
+      if (existenceResults.emailExists) {
+        existenceResults.message = "البريد الإلكتروني موجود بالفعل";
+      }
     }
 
     if (universityNumber) {
@@ -536,6 +546,9 @@ class CtrlStudentService {
         universityNumber,
       });
       existenceResults.universityNumberExists = !!universityNumberExists;
+      if (existenceResults.universityNumberExists) {
+        existenceResults.message = "الرقم الجامعي موجود بالفعل";
+      }
     }
 
     return existenceResults;

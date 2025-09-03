@@ -15,6 +15,8 @@ export interface ICourse extends Document {
   semester: "الفصل الأول" | "الفصل الثاني";
   rating: number;
   about: string;
+  available: boolean;
   video: string;
   free: boolean;
+  students: Types.ObjectId[];
 }

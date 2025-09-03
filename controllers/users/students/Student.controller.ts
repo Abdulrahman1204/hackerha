@@ -15,7 +15,7 @@ class CtrlStudentController {
       const targetUserId = req.params.id;
 
       if (user?.id !== targetUserId) {
-        throw new ForbiddenError("غير مصرح لك بتعديل هذا الملف الشخصي");
+        throw new ForbiddenError("غير مصرح لك ");
       }
 
       const result = await CtrlStudentService.getProfileStudent(targetUserId);

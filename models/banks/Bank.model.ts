@@ -42,6 +42,10 @@ const BankSchema = new Schema<IBanks>(
       type: Boolean,
       default: true,
     },
+    available: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
@@ -117,6 +121,9 @@ const validateUpdateBank = (obj: Partial<IBanks>): joi.ValidationResult => {
       "any.only": "يجب ان يكون الفصل الأول او الفصل الثاني",
     }),
     free: joi.boolean(),
+    available: joi.boolean().messages({
+      "boolean.base": "يجب أن تكون قيمة free صحيحة أو خاطئة",
+    }),
   });
 
   return schema.validate(obj);

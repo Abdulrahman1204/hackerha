@@ -11,4 +11,5 @@ export interface IBanks extends Document {
     | "السنة الخامسة";
   semester: "الفصل الأول" | "الفصل الثاني";
   free: true;
+  available: boolean;
 }

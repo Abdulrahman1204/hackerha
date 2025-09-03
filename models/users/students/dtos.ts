@@ -4,7 +4,6 @@ export interface IStudent extends Document {
   profilePhoto: string;
   userName: string;
   phoneNumber: string;
-  university: "جامعة قرطبة" | "جامعة إيبلا" | "جامعة الشهباء" | "جامعة حلب";
   academicYear: Date;
   universityNumber: number;
   gender: "ذكر" | "انثى";
@@ -12,7 +11,7 @@ export interface IStudent extends Document {
   email: string;
   password: string;
   otp: string;
-  available: boolean; 
+  available: boolean;
   suspended: boolean;
   resetPass: boolean;
   suspensionReason: string;
@@ -20,6 +19,7 @@ export interface IStudent extends Document {
   favoriteCourses: Types.ObjectId[];
   favoriteSessions: Types.ObjectId[];
   favoriteBank: Types.ObjectId[];
+  enrolledCourses: Types.ObjectId[];
 }
 
 export interface IOtp extends Document {
