@@ -7,7 +7,7 @@ const router: Router = Router();
 
 router.route("/").post(upload, questionBankController.createQuestionBank);
 
-router.route("/:id").get(verifyToken,questionBankController.getQuestionBankById);
+router.route("/:id").get(verifyToken, questionBankController.getQuestionBankById);
 
 router
   .route("/content/:contentId")

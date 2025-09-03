@@ -13,7 +13,7 @@ dotenv.config();
 // routes import student
 import routeAuthStudent from "./routes/users/students/Auth.route";
 import routeCtrlStudent from "./routes/users/students/Student.route";
-import routeResult from './routes/result/Result.route'
+import routeResult from './routes/results/Result.route'
 
 // route import course
 import routeCourse from "./routes/course/Course.route";

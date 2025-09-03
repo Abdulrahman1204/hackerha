@@ -15,24 +15,12 @@ router
 router.route("/:id").get(ctrlResultController.getResultById);
 
 // ~ Post => /api/univers/ctrl/result ~ Create New Result
-router
-  .route("/")
-  .post(
-    ctrlResultController.createResult
-  );
+router.route("/").post(ctrlResultController.createResult);
 
 // ~ Put => /api/univers/ctrl/result/:id ~ Update Result
-router
-  .route("/:id")
-  .put(
-    ctrlResultController.updateResult
-  );
+router.route("/:id").put(ctrlResultController.updateResult);
 
 // ~ Delete => /api/univers/ctrl/result/:id ~ Delete Result
-router
-  .route("/:id")
-  .delete(
-    ctrlResultController.deleteResult
-  );
+router.route("/:id").delete(ctrlResultController.deleteResult);
 
 export default router;

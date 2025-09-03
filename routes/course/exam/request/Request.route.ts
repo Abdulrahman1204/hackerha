@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ctrlRequestController } from "../../../../controllers/courses/exam/request/Request.controller";
 import upload from "../../../../middlewares/cloudinary";
+import verifyToken from "../../../../middlewares/verifyToken";
 
 const router: Router = Router();
 
@@ -8,12 +9,12 @@ const router: Router = Router();
 router.route("/").post(upload, ctrlRequestController.createRequest);
 
 // ~ Get => /api/univers/ctrl/request/:id ~ Get Request by ID
-router.route("/:id").get(ctrlRequestController.getRequestById);
+router.route("/:id").get(verifyToken, ctrlRequestController.getRequestById);
 
 // ~ Get => /api/univers/ctrl/request/question/:questionId ~ Get Requests by Question ID
 router
   .route("/question/:questionId")
-  .get(ctrlRequestController.getRequestsByQuestionId);
+  .get(verifyToken, ctrlRequestController.getRequestsByQuestionId);
 
 // ~ Put => /api/univers/ctrl/request/:id ~ Update Request
 router.route("/:id").put(upload, ctrlRequestController.updateRequest);

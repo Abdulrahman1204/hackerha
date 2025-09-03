@@ -1,6 +1,7 @@
 import { Router } from "express";
 import upload from "../../../../middlewares/cloudinary";
 import { ctrlRequestBankController } from "../../../../controllers/banks/content/request/RequestBank.controller";
+import verifyToken from "../../../../middlewares/verifyToken";
 
 const router: Router = Router();
 
@@ -8,12 +9,12 @@ const router: Router = Router();
 router.route("/").post(upload, ctrlRequestBankController.createRequestBank);
 
 // ~ Get => /api/univers/ctrl/request-bank/:id ~ Get RequestBank by ID
-router.route("/:id").get(ctrlRequestBankController.getRequestBankById);
+router.route("/:id").get(verifyToken, ctrlRequestBankController.getRequestBankById);
 
 // ~ Get => /api/univers/ctrl/request-bank/question-bank/:questionBankId ~ Get RequestBanks by Question Bank ID
 router
   .route("/question-bank/:questionBankId")
-  .get(ctrlRequestBankController.getRequestBanksByQuestionBankId);
+  .get(verifyToken, ctrlRequestBankController.getRequestBanksByQuestionBankId);
 
 // ~ Put => /api/univers/ctrl/request-bank/:id ~ Update RequestBank
 router.route("/:id").put(upload, ctrlRequestBankController.updateRequestBank);

@@ -11,7 +11,7 @@ router.route("/code").post(paymentController.generatePaymentCode);
 router.route("/verify").post(verifyToken, paymentController.verifyPaymentCode);
 
 // ~ GET /api/payment/codes/:universityNumber ~ Get payment codes
-router.route("/codes/:universityNumber").get( paymentController.getStudentPaymentCodes);
+router.route("/codes/:universityNumber").get(paymentController.getStudentPaymentCodes);
 
 // ~ GET /api/payment/enrollments/:studentId ~ Get enrollments
 router.route("/enrollments/:studentId").get(paymentController.getStudentEnrollments);
