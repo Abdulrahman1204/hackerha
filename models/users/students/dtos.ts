@@ -4,7 +4,12 @@ export interface IStudent extends Document {
   profilePhoto: string;
   userName: string;
   phoneNumber: string;
-  academicYear: Date;
+  academicYear:
+    | "السنة الأولى"
+    | "السنة الثانية"
+    | "السنة الثالثة"
+    | "السنة الرابعة"
+    | "السنة الخامسة";
   universityNumber: number;
   gender: "ذكر" | "انثى";
   birth: Date;

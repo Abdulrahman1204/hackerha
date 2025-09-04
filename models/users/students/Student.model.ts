@@ -29,7 +29,17 @@ const StudentSchema = new Schema<IStudent>(
       },
     },
     academicYear: {
-      type: Date,
+      type: String,
+      enum: {
+        values: [
+          "السنة الأولى",
+          "السنة الثانية",
+          "السنة الثالثة",
+          "السنة الرابعة",
+          "السنة الخامسة",
+        ],
+        message: "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+      },
       required: [true, "السنة الدراسية مطلوبة"],
     },
     universityNumber: {
@@ -179,10 +189,20 @@ const validateCreateStudent = (obj: IStudent): joi.ValidationResult => {
       "any.only": "يحب أن يكون ذكر أو انثى",
       "any.required": "نوع الجنس مطلوب",
     }),
-    academicYear: joi.date().required().messages({
-      "date.base": "صيغة السنة الدراسية غير صحيحة",
-      "any.required": "السنة الدراسية مطلوبة",
-    }),
+    academicYear: joi
+      .string()
+      .valid(
+        "السنة الأولى",
+        "السنة الثانية",
+        "السنة الثالثة",
+        "السنة الرابعة",
+        "السنة الخامسة"
+      )
+      .required()
+      .messages({
+        "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+        "any.required": "السنة الدراسية مطلوبة",
+      }),
     universityNumber: joi.number().required().messages({
       "string.empty": "الرقم الجامعي مطلوب",
       "any.required": "الرقم الجامعي مطلوب",
@@ -311,10 +331,18 @@ const validateUpdateImportantStudent = (
         "string.empty": "رقم الهاتف مطلوب",
         "any.required": "رقم الهاتف مطلوب",
       }),
-    academicYear: joi.date().messages({
-      "date.base": "صيغة السنة الدراسية غير صحيحة",
-      "any.required": "السنة الدراسية مطلوبة",
-    }),
+    academicYear: joi
+      .string()
+      .valid(
+        "السنة الأولى",
+        "السنة الثانية",
+        "السنة الثالثة",
+        "السنة الرابعة",
+        "السنة الخامسة"
+      )
+      .messages({
+        "any.only": "يجب ان يكون من السنة الاولى الى السنة الخامسة",
+      }),
     universityNumber: joi.number().messages({
       "string.empty": "الرقم الجامعي مطلوب",
       "any.required": "الرقم الجامعي مطلوب",
