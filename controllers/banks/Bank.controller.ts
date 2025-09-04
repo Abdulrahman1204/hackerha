@@ -81,6 +81,21 @@ class CtrlBanksController {
       res.status(200).json(result);
     }
   );
+
+  // ~ PATCH => /api/hackit/ctrl/bank/:bankId/user/:userId ~ Add bank to student
+  addBankToStudent = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const user = (req as AuthenticatedRequest).user;
+      const { bankId, userId } = req.params;
+
+      if (user?.id !== userId) {
+        throw new ForbiddenError("غير مصرح لك ");
+      }
+      const result = await CtrlBanksService.addBankForStudent(userId, bankId);
+
+      res.status(200).json(result);
+    }
+  );
 }
 
 export const ctrlBanksController = new CtrlBanksController();

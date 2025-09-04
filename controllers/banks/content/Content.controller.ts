@@ -58,6 +58,21 @@ class CtrlContentController {
       res.status(200).json(result);
     }
   );
+
+  // ~ PATCH => /api/hackit/ctrl/content/:contentId/user/:userId ~ Add Content to student
+  addContentToStudent = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const user = (req as AuthenticatedRequest).user;
+      const { contentId, userId } = req.params;
+
+      if (user?.id !== userId) {
+        throw new ForbiddenError("غير مصرح لك ");
+      }
+      const result = await CtrlContentService.addContentForStudent(userId, contentId);
+
+      res.status(200).json(result);
+    }
+  );
 }
 
 export const ctrlContentController = new CtrlContentController();

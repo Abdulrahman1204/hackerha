@@ -23,4 +23,7 @@ router.route("/:id").put(ctrlContentController.updateContent);
 // ~ Delete => /api/hackit/ctrl/content/:id ~ Delete Content
 router.route("/:id").delete(ctrlContentController.deleteContent);
 
+// ~ PATCH => /api/hackit/ctrl/content/:contentId/user/:userId ~ Add content to student
+router.route("/:contentId/user/:userId").patch(verifyToken, checkRole(['student']), ctrlContentController.addContentToStudent);
+
 export default router;

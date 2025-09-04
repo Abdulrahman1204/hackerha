@@ -8,6 +8,7 @@ import {
   validateUpdateContent,
 } from "../../../models/banks/content/Content.model";
 import { IContent } from "../../../models/banks/content/dtos";
+import { Student } from "../../../models/users/students/Student.model";
 
 class CtrlContentService {
   // ~ Get => /api/hackit/ctrl/content ~ Get All Content
@@ -83,6 +84,25 @@ class CtrlContentService {
       throw new NotFoundError("المحتوى غير موجود");
     }
     return { message: "تم حذف المحتوى بنجاح" };
+  }
+
+  // ~ patch => /api/hackit/ctrl/content/:contentId/user/:userId ~ add content in the data of student
+  static async addContentForStudent(id: string, contentid: string) {
+    const student = await Student.findById(id);
+    if (!student) throw new NotFoundError("الطالب غير موجود");
+
+    const content = await Content.findById(contentid);
+    if (!content) throw new NotFoundError("المحتوى غير موجود");
+
+    await Student.findByIdAndUpdate(
+      id,
+      { $addToSet: { contents: contentid } },
+      { new: true }
+    );
+
+    return {
+      message: "تم إضافة المحتوى للطالب بنجاح",
+    };
   }
 }
 

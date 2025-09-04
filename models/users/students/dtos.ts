@@ -20,6 +20,8 @@ export interface IStudent extends Document {
   favoriteSessions: Types.ObjectId[];
   favoriteBank: Types.ObjectId[];
   enrolledCourses: Types.ObjectId[];
+  banks: Types.ObjectId[];
+  contents: Types.ObjectId[];
 }
 
 export interface IOtp extends Document {

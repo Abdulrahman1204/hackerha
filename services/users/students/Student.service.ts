@@ -39,15 +39,18 @@ class CtrlStudentService {
     }
 
     const student = await Student.findById(id)
-    .select(
-      "-password -otp -suspended -available -resetPass -createdAt -updatedAt -__v"
-    )
-    .populate("favoriteCourses favoriteSessions")
-    .populate({
-      path: "enrolledCourses",
-      select: "name image description price rating year semester type discount free available", // Select the fields you want
-      options: { sort: { createdAt: -1 } } // Optional: sort courses
-    });
+      .select(
+        "-password -otp -suspended -available -resetPass -createdAt -updatedAt -__v"
+      )
+      .populate("favoriteCourses favoriteSessions")
+      .populate({
+        path: "enrolledCourses",
+        select:
+          "name image description price rating year semester type discount free available",
+        options: { sort: { createdAt: -1 } },
+      })
+      .populate("banks")
+      .populate("contents");
 
     return student;
   }

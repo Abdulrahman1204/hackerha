@@ -6,6 +6,7 @@ import {
 } from "../../models/banks/Bank.model";
 import { Content } from "../../models/banks/content/Content.model";
 import { IBanks } from "../../models/banks/dtos";
+import { Student } from "../../models/users/students/Student.model";
 import { ICloudinaryFile } from "../../utils/types";
 
 class CtrlBanksService {
@@ -173,6 +174,25 @@ class CtrlBanksService {
     if (!updatedBank) throw new NotFoundError("فشل تحديث صورة البنك");
 
     return { message: "تم تحديث صورة البنك بنجاح" };
+  }
+
+  // ~ patch => /api/hackit/ctrl/bank/:bankId/user/:userId ~ add bank in the data of student
+  static async addBankForStudent(id: string, bankid: string) {
+    const student = await Student.findById(id);
+    if (!student) throw new NotFoundError("الطالب غير موجود");
+
+    const bank = await Bank.findById(bankid);
+    if (!bank) throw new NotFoundError("البنك غير موجود");
+
+    await Student.findByIdAndUpdate(
+      id,
+      { $addToSet: { banks: bankid } },
+      { new: true }
+    );
+
+    return {
+      message: "تم إضافة البنك للطالب بنجاح",
+    };
   }
 }
 

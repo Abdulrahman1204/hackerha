@@ -104,6 +104,20 @@ const StudentSchema = new Schema<IStudent>(
         default: [],
       },
     ],
+    banks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Bank",
+        default: [],
+      },
+    ],
+    contents: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Content",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,
